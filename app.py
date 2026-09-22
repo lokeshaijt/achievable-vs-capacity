@@ -3,19 +3,122 @@ Achievable Vs Produced — Streamlit App
 Upload Production Register → download report
 """
 
+import base64
 import datetime
 import pathlib
 
 import streamlit as st
+from PIL import Image
 
 from avp_generator import generate_avp_report, weeknum, week_label
 from mailer import EmailNotConfigured, send_report_email
 
+# ── Brand assets ──────────────────────────────────────────────────────────────
+LOGO_PATH = pathlib.Path(__file__).parent / "assets" / "jay_logo.jpg"
+
+@st.cache_data(show_spinner=False)
+def _load_logo_b64():
+    return base64.b64encode(LOGO_PATH.read_bytes()).decode()
+
+logo_b64 = _load_logo_b64()
+
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Achievable Vs Produced Report",
-    page_icon="📊",
+    page_icon=Image.open(LOGO_PATH),
     layout="centered",
+)
+
+# ── Brand styling (JAY black / gold palette) ──────────────────────────────────
+st.markdown(
+    """
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+    html, body, [class*="css"] { font-family: 'Poppins', sans-serif; }
+
+    .jay-header {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        background: linear-gradient(135deg, #141414 0%, #000000 100%);
+        border: 1px solid #D9A526;
+        border-radius: 16px;
+        padding: 18px 26px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    }
+    .jay-header .jay-logo-frame {
+        background: #ffffff;
+        border-radius: 50%;
+        padding: 4px;
+        display: flex;
+        box-shadow: 0 0 0 2px #D9A526;
+        flex-shrink: 0;
+    }
+    .jay-header .jay-logo-frame img {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        display: block;
+    }
+    .jay-header h1 {
+        color: #F2C94C;
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin: 0;
+        line-height: 1.25;
+    }
+    .jay-header p {
+        color: #E8E1CF;
+        font-size: 0.92rem;
+        margin: 4px 0 0 0;
+    }
+
+    hr { border-top: 1px solid #E9D28C; }
+
+    div[data-testid="stButton"] button,
+    div[data-testid="stDownloadButton"] button {
+        background: linear-gradient(135deg, #F2C94C 0%, #D9A526 100%);
+        color: #141414;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+    }
+    div[data-testid="stButton"] button:hover,
+    div[data-testid="stDownloadButton"] button:hover {
+        background: linear-gradient(135deg, #F7D96B 0%, #E6B62C 100%);
+        color: #000000;
+    }
+    div[data-testid="stButton"] button:disabled {
+        background: #EFE6C4;
+        color: #7A6B3E;
+        border: 1px solid #D9C98A;
+        opacity: 1;
+    }
+
+    div[data-testid="stSlider"] > div > div > div {
+        background: #E9D28C !important;
+    }
+    div[data-testid="stSlider"] > div > div > div > div {
+        background: #D9A526 !important;
+    }
+
+    div[data-testid="stExpander"] {
+        border: 1px solid #E9D28C;
+        border-radius: 10px;
+    }
+
+    .jay-footer {
+        color: #7A6B3E;
+        font-size: 0.85rem;
+        border-top: 1px solid #E9D28C;
+        padding-top: 12px;
+        margin-top: 8px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
 )
 
 # ── Reference workbook (bundled with repo) ────────────────────────────────────
@@ -27,11 +130,21 @@ def _load_ref():
 
 ref_bytes = _load_ref()
 
-# ── UI ────────────────────────────────────────────────────────────────────────
-st.title("📊 Achievable Vs Produced Report")
+# ── UI: branded header ─────────────────────────────────────────────────────────
 st.markdown(
-    "Upload the **Production Register** to generate the weekly achieved "
-    "capacity report — by container and by percentage."
+    f"""
+    <div class="jay-header">
+        <div class="jay-logo-frame">
+            <img src="data:image/jpeg;base64,{logo_b64}" alt="JAY logo" />
+        </div>
+        <div>
+            <h1>📊 Achievable Vs Produced Report</h1>
+            <p>Upload the Production Register to generate the weekly achieved
+            capacity report — by container and by percentage.</p>
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
 )
 
 col1, col2 = st.columns([2, 1])
@@ -144,10 +257,14 @@ if "report_bytes" in st.session_state:
                         st.error(f"❌ Failed to send email:\n\n```\n{exc}\n```")
 
 # ── Footer ────────────────────────────────────────────────────────────────────
-st.divider()
-st.caption(
-    "**Conversion chain:** Production Qty (CTN) × TBGS/CTN ÷ TBGS/CFC ÷ CFC/Container "
-    "= Achieved Containers.  "
-    "**Capacity** = Rate × ShiftMin × Machines × Shifts × 6 days × 90% ÷ TBGS/CFC ÷ CFC/Container.  "
-    "Machines and Shifts are editable in the downloaded report — Capacity and % update automatically."
+st.markdown(
+    """
+    <div class="jay-footer">
+    <b>Conversion chain:</b> Production Qty (CTN) × TBGS/CTN ÷ TBGS/CFC ÷ CFC/Container
+    = Achieved Containers.&nbsp;&nbsp;
+    <b>Capacity</b> = Rate × ShiftMin × Machines × Shifts × 6 days × 90% ÷ TBGS/CFC ÷ CFC/Container.&nbsp;&nbsp;
+    Machines and Shifts are editable in the downloaded report — Capacity and % update automatically.
+    </div>
+    """,
+    unsafe_allow_html=True,
 )

@@ -1,5 +1,5 @@
 """
-Achievable Vs Produced — Streamlit App
+Capacity vs 4 Weeks production — Streamlit App
 Upload Production Register → download report
 """
 
@@ -24,7 +24,7 @@ logo_b64 = _load_logo_b64()
 
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
-    page_title="Achievable Vs Produced Report",
+    page_title="Capacity vs 4 Weeks production",
     page_icon=Image.open(LOGO_PATH),
     layout="centered",
 )
@@ -143,7 +143,7 @@ st.markdown(
             <img src="data:image/jpeg;base64,{logo_b64}" alt="JAY logo" />
         </div>
         <div>
-            <h1>📊 Achievable Vs Produced Report</h1>
+            <h1>📊 Capacity vs 4 Weeks production</h1>
             <p>Upload the Production Register to generate the weekly achieved
             capacity report — by container and by percentage.</p>
         </div>
@@ -201,7 +201,7 @@ if btn and ready:
 
             st.session_state["report_bytes"] = result_bytes
             st.session_state["report_filename"] = (
-                f"Achievable_Vs_Produced_{as_of.strftime('%d-%b-%Y')}.xlsx"
+                f"Capacity_vs_4_Weeks_production_{as_of.strftime('%d-%b-%Y')}.xlsx"
             )
             st.session_state["report_skipped"] = skipped
 
@@ -247,9 +247,9 @@ if "report_bytes" in st.session_state:
                     try:
                         sent_to = send_report_email(
                             to_addrs=to_email,
-                            subject=f"Achievable Vs Produced Report — {as_of.strftime('%d-%b-%Y')}",
+                            subject=f"Capacity vs 4 Weeks production — {as_of.strftime('%d-%b-%Y')}",
                             body=(
-                                "Please find attached the Achievable Vs Produced report "
+                                "Please find attached the Capacity vs 4 Weeks production report "
                                 f"for weeks {target_weeks[0]}–{target_weeks[-1]}."
                             ),
                             attachment_bytes=st.session_state["report_bytes"],

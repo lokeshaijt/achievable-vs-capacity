@@ -9,6 +9,7 @@ import pathlib
 import streamlit as st
 
 from avp_generator import generate_avp_report, weeknum, week_label
+from mailer import EmailNotConfigured, send_report_email
 
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -80,29 +81,67 @@ if btn and ready:
                 target_weeks=target_weeks,
             )
 
-            filename = f"Achievable_Vs_Produced_{as_of.strftime('%d-%b-%Y')}.xlsx"
-
-            st.success("✅ Report generated successfully!")
-
-            st.download_button(
-                label="⬇️ Download Report",
-                data=result_bytes,
-                file_name=filename,
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            st.session_state["report_bytes"] = result_bytes
+            st.session_state["report_filename"] = (
+                f"Achievable_Vs_Produced_{as_of.strftime('%d-%b-%Y')}.xlsx"
             )
-
-            if skipped:
-                skipped_sorted = sorted(skipped)
-                st.warning(
-                    f"⚠️ **{len(skipped_sorted)} product(s) could not be converted** "
-                    f"(no TBGS/CTN value found — excluded from achieved totals):\n\n"
-                    + "\n".join(f"- {n}" for n in skipped_sorted[:20])
-                    + ("\n- …and more" if len(skipped_sorted) > 20 else "")
-                )
+            st.session_state["report_skipped"] = skipped
 
         except Exception as exc:
             st.error(f"❌ Error generating report:\n\n```\n{exc}\n```")
             raise
+
+# ── Result: download + email ──────────────────────────────────────────────────
+if "report_bytes" in st.session_state:
+    st.success("✅ Report generated successfully!")
+
+    st.download_button(
+        label="⬇️ Download Report",
+        data=st.session_state["report_bytes"],
+        file_name=st.session_state["report_filename"],
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+
+    skipped = st.session_state.get("report_skipped")
+    if skipped:
+        skipped_sorted = sorted(skipped)
+        st.warning(
+            f"⚠️ **{len(skipped_sorted)} product(s) could not be converted** "
+            f"(no TBGS/CTN value found — excluded from achieved totals):\n\n"
+            + "\n".join(f"- {n}" for n in skipped_sorted[:20])
+            + ("\n- …and more" if len(skipped_sorted) > 20 else "")
+        )
+
+    with st.expander("📧 Send this report by email"):
+        to_email = st.text_input(
+            "Recipient email(s)",
+            placeholder="name@example.com, name2@example.com",
+            help="Comma-separate multiple addresses.",
+            key="to_email",
+        )
+        send_clicked = st.button("📧 Send Email")
+
+        if send_clicked:
+            if not to_email.strip():
+                st.error("Enter at least one recipient email address.")
+            else:
+                with st.spinner("Sending email…"):
+                    try:
+                        sent_to = send_report_email(
+                            to_addrs=to_email,
+                            subject=f"Achievable Vs Produced Report — {as_of.strftime('%d-%b-%Y')}",
+                            body=(
+                                "Please find attached the Achievable Vs Produced report "
+                                f"for weeks {target_weeks[0]}–{target_weeks[-1]}."
+                            ),
+                            attachment_bytes=st.session_state["report_bytes"],
+                            attachment_filename=st.session_state["report_filename"],
+                        )
+                        st.success(f"✅ Email sent to {', '.join(sent_to)}")
+                    except EmailNotConfigured as exc:
+                        st.error(f"❌ {exc}")
+                    except Exception as exc:
+                        st.error(f"❌ Failed to send email:\n\n```\n{exc}\n```")
 
 # ── Footer ────────────────────────────────────────────────────────────────────
 st.divider()

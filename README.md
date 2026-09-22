@@ -18,26 +18,45 @@ Single sheet (`achievable vs produced`) with two side-by-side analyses:
 ## Files
 
 ```
-app.py                  — Streamlit UI
-avp_generator.py        — All generation logic
-reference_workbook.xlsx — TBGS PER CTN lookup table (1549 entries)
+app.py                          — Streamlit UI
+avp_generator.py                — All generation logic
+mailer.py                       — SMTP email delivery for the generated report
+reference_workbook.xlsx         — TBGS PER CTN lookup table (1549 entries)
+.streamlit/secrets.toml.example — Template for SMTP credentials
 requirements.txt
 README.md
 ```
+
+## Email the report
+
+After generating a report, expand **📧 Send this report by email**, enter one
+or more recipient addresses (comma-separated), and click **Send Email** — the
+report is attached and sent via SMTP.
+
+This needs SMTP credentials configured as Streamlit secrets (not the
+recipient's email — that's just typed into the box each time):
+
+1. Copy `.streamlit/secrets.toml.example` to `.streamlit/secrets.toml` locally,
+   or paste its contents into the app's **Secrets** settings on Streamlit Cloud.
+2. Fill in `server`, `port`, `username`, `password` (and optionally `sender`).
+   For Gmail, use an **App Password** (Google Account → Security → 2-Step
+   Verification → App passwords), not your normal password.
+3. Never commit the real `secrets.toml` — it's already in `.gitignore`.
 
 ## Deploy on Streamlit Cloud
 
 1. Push this repo to GitHub (public, or connect your account)
 2. Go to [share.streamlit.io](https://share.streamlit.io) → **New app**
 3. Select repo, branch `main`, main file `app.py`
-4. Click **Deploy** — no secrets needed
+4. Add your SMTP secrets under **Advanced settings → Secrets** (see above)
+5. Click **Deploy**
 
 ## How to use
 
 1. Open the app
 2. Upload today's **Production Register** (.xlsx)
 3. Set As-Of Date and number of past weeks (default: 4)
-4. Click **Generate Report** → download
+4. Click **Generate Report** → download, or email it directly
 
 ## Conversion chain
 

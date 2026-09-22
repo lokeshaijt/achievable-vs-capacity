@@ -41,12 +41,12 @@ st.markdown(
         display: flex;
         align-items: center;
         gap: 20px;
-        background: linear-gradient(135deg, #141414 0%, #000000 100%);
+        background: linear-gradient(135deg, #1E1B12 0%, #000000 100%);
         border: 1px solid #D9A526;
         border-radius: 16px;
         padding: 18px 26px;
         margin-bottom: 24px;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+        box-shadow: 0 0 20px rgba(217, 165, 38, 0.15);
     }
     .jay-header .jay-logo-frame {
         background: #ffffff;
@@ -75,7 +75,7 @@ st.markdown(
         margin: 4px 0 0 0;
     }
 
-    hr { border-top: 1px solid #E9D28C; }
+    hr { border-top: 1px solid #3A331E; }
 
     div[data-testid="stButton"] button,
     div[data-testid="stDownloadButton"] button {
@@ -91,28 +91,33 @@ st.markdown(
         color: #000000;
     }
     div[data-testid="stButton"] button:disabled {
-        background: #EFE6C4;
-        color: #7A6B3E;
-        border: 1px solid #D9C98A;
+        background: #2A2517;
+        color: #8C7F55;
+        border: 1px solid #4A4126;
         opacity: 1;
     }
 
     div[data-testid="stSlider"] > div > div > div {
-        background: #E9D28C !important;
+        background: #4A4126 !important;
     }
     div[data-testid="stSlider"] > div > div > div > div {
         background: #D9A526 !important;
     }
 
     div[data-testid="stExpander"] {
-        border: 1px solid #E9D28C;
+        border: 1px solid #3A331E;
         border-radius: 10px;
     }
 
+    div[data-testid="stFileUploaderDropzone"],
+    div[data-testid="stDateInput"] input {
+        border: 1px solid #3A331E !important;
+    }
+
     .jay-footer {
-        color: #7A6B3E;
+        color: #A99B6E;
         font-size: 0.85rem;
-        border-top: 1px solid #E9D28C;
+        border-top: 1px solid #3A331E;
         padding-top: 12px;
         margin-top: 8px;
     }

@@ -265,9 +265,6 @@ if "report_bytes" in st.session_state:
 st.markdown(
     """
     <div class="jay-footer">
-    <b>Conversion chain:</b> Production Qty (CTN) × TBGS/CTN ÷ TBGS/CFC ÷ CFC/Container
-    = Achieved Containers.&nbsp;&nbsp;
-    <b>Capacity</b> = Rate × ShiftMin × Machines × Shifts × 6 days × 90% ÷ TBGS/CFC ÷ CFC/Container.&nbsp;&nbsp;
     Machines and Shifts are editable in the downloaded report — Capacity and % update automatically.
     </div>
     """,

@@ -475,20 +475,19 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks):
             ws.cell(row, LKP_COL+i, f.get(key, 0)).font = hf
 
         # F — Capacity: live formula using D, E, and hidden factors
-        zero_cap = (ns == 0)
+        # (always a formula, even when Shifts starts at 0, so editing D/E
+        #  in the downloaded report recalculates Capacity live)
+        zero_shifts = (ns == 0)
         f_cell = ws.cell(row, 6)
         f_cell.border = BORDER; f_cell.font = S["NORM"]
         f_cell.alignment = Alignment(horizontal="right")
         Q = get_column_letter(LKP_COL); R = get_column_letter(LKP_COL+1)
         S_col = get_column_letter(LKP_COL+2); T = get_column_letter(LKP_COL+3)
-        if zero_cap:
-            f_cell.value = "-"
-        else:
-            f_cell.value = (
-                f'=IFERROR(IF({T}{row}=0,"-",'
-                f'ROUND({Q}{row}*{R}{row}*$D{row}*$E{row}*6*0.9/{S_col}{row}/{T}{row},3)),'
-                f'"-")'
-            )
+        f_cell.value = (
+            f'=IFERROR(IF({T}{row}=0,"-",'
+            f'ROUND({Q}{row}*{R}{row}*$D{row}*$E{row}*6*0.9/{S_col}{row}/{T}{row},3)),'
+            f'"-")'
+        )
         f_cell.number_format = S["NUMFMT_CNTR"]
 
         # Pre-compute capacity for over-capacity colouring
@@ -500,7 +499,7 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks):
             c_cell = ws.cell(row, CNTR_FIRST+i)
             c_cell.border = BORDER
             c_cell.alignment = Alignment(horizontal="right")
-            if zero_cap or (ach == 0 and not cap_val):
+            if zero_shifts or (ach == 0 and not cap_val):
                 c_cell.value = "-"; c_cell.font = S["NORM"]
             else:
                 c_cell.value = round(ach, 3)
@@ -508,21 +507,19 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks):
                 c_cell.font = S["OVER_FONT"] if (cap_val and ach > cap_val) else S["NORM"]
 
         # K-N — Percentage: live formula referencing F (capacity)
+        # (always a formula too, so it updates the moment Capacity does)
         for i in range(n_weeks):
             ach_col = get_column_letter(CNTR_FIRST+i)
             p_cell = ws.cell(row, PCT_FIRST+i)
             p_cell.border = BORDER
             p_cell.alignment = Alignment(horizontal="right")
-            if zero_cap:
-                p_cell.value = "-"; p_cell.font = S["NORM"]
-            else:
-                p_cell.value = (
-                    f'=IFERROR(IF($F{row}="-","-",'
-                    f'IF($F{row}=0,0,ROUND({ach_col}{row}/$F{row}*100,0))),"-")'
-                )
-                p_cell.number_format = S["NUMFMT_PCT"]
-                ach = achieved.get((line, target_weeks[i]), 0)
-                p_cell.font = S["OVER_FONT"] if (cap_val and ach > cap_val) else S["NORM"]
+            p_cell.value = (
+                f'=IFERROR(IF($F{row}="-","-",'
+                f'IF($F{row}=0,0,ROUND({ach_col}{row}/$F{row}*100,0))),"-")'
+            )
+            p_cell.number_format = S["NUMFMT_PCT"]
+            ach = achieved.get((line, target_weeks[i]), 0)
+            p_cell.font = S["OVER_FONT"] if (cap_val and ach > cap_val) else S["NORM"]
 
         row += 1
 

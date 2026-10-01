@@ -1,6 +1,6 @@
 """
 Capacity vs 4 Weeks production — Streamlit App
-Upload Production Register → download report
+Upload Production Register → download report (finalized format)
 """
 
 import base64
@@ -135,6 +135,13 @@ def _load_ref():
 
 ref_bytes = _load_ref()
 
+# ── FG Blend Names (bundled; can be replaced by an upload) ────────────────────
+FG_PATH = pathlib.Path(__file__).parent / "FG_Blend_Names.xlsx"
+
+@st.cache_data(show_spinner=False)
+def _load_fg():
+    return FG_PATH.read_bytes()
+
 # ── UI: branded header ─────────────────────────────────────────────────────────
 st.markdown(
     f"""
@@ -144,8 +151,9 @@ st.markdown(
         </div>
         <div>
             <h1>📊 Capacity vs 4 Weeks production</h1>
-            <p>Upload the Production Register to generate the weekly achieved
-            capacity report — by container and by percentage.</p>
+            <p>Upload the Production Register to generate the <i>Capacity Vs Produced</i> report —
+            capacity, achieved containers and % for each machine line and week — with the
+            <b>Blend</b> and <b>Brand changeovers</b>.</p>
         </div>
     </div>
     """,
@@ -165,6 +173,13 @@ with col2:
         value=datetime.date.today(),
         help="Used to determine the current week number.",
     )
+
+with st.expander("🧪 Blend names for changeovers (FG Blend Names)", expanded=False):
+    st.markdown(
+        "Blend names come from the **FG Blend Names** file bundled with the app. "
+        "If new FG items were added, upload the latest file here to use it instead."
+    )
+    fg_file = st.file_uploader("FG Blend Names (.xlsx) — optional", type=["xlsx"], key="fg")
 
 # ── Week selector ─────────────────────────────────────────────────────────────
 current_wn = weeknum(as_of)
@@ -193,17 +208,20 @@ if not ready:
 if btn and ready:
     with st.spinner("Converting production data → containers → report…"):
         try:
-            result_bytes, skipped = generate_avp_report(
+            result_bytes, skipped, co = generate_avp_report(
                 pr_bytes=pr_file.read(),
                 ref_bytes=ref_bytes,
                 target_weeks=target_weeks,
+                fg_blend_bytes=fg_file.read() if fg_file is not None else _load_fg(),
             )
 
             st.session_state["report_bytes"] = result_bytes
             st.session_state["report_filename"] = (
-                f"Capacity_vs_4_Weeks_production_{as_of.strftime('%d-%b-%Y')}.xlsx"
+                f"Capacity_vs_{len(target_weeks)}_weeks_production_"
+                f"W{target_weeks[0]}_{target_weeks[-1]}.xlsx"
             )
             st.session_state["report_skipped"] = skipped
+            st.session_state["report_co"] = co
 
         except Exception as exc:
             st.error(f"❌ Error generating report:\n\n```\n{exc}\n```")
@@ -219,6 +237,29 @@ if "report_bytes" in st.session_state:
         file_name=st.session_state["report_filename"],
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     )
+
+    co = st.session_state.get("report_co")
+    if co:
+        m1, m2, m3 = st.columns(3)
+        m1.metric("Blend changeovers (all weeks in register)", co["blend_total"])
+        m2.metric("Brand changeovers (all weeks in register)", co["brand_total"])
+        m3.metric("Machine-shifts analysed", co["machine_shifts"])
+        if co["unknown_items"]:
+            st.warning(
+                f"⚠️ **{len(co['unknown_items'])} FG item(s) have no blend in the FG Blend Names file** — "
+                "each is treated as its own blend (so it counts as a changeover). "
+                "Upload an updated FG Blend Names file:\n\n"
+                + "\n".join(f"- {n}" for n in co["unknown_items"][:20])
+                + ("\n- …and more" if len(co["unknown_items"]) > 20 else "")
+            )
+        unmapped = {wc: v for wc, v in co["not_in_report"].items() if v != (0, 0)}
+        if unmapped:
+            st.info(
+                "ℹ️ Changeovers on work centers that have no machine line in the report are only in the "
+                "all-machines total row under the changeover columns. To give them a line, unhide the "
+                "**CO Routing** sheet (right-click a tab → Unhide) and re-map them:\n\n"
+                + "\n".join(f"- {wc}: blend {b}, brand {r}" for wc, (b, r) in unmapped.items())
+            )
 
     skipped = st.session_state.get("report_skipped")
     if skipped:
@@ -247,7 +288,10 @@ if "report_bytes" in st.session_state:
                     try:
                         sent_to = send_report_email(
                             to_addrs=to_email,
-                            subject=f"Capacity vs 4 Weeks production — {as_of.strftime('%d-%b-%Y')}",
+                            subject=(
+                                f"Capacity vs {len(target_weeks)} Weeks production — "
+                                f"W{target_weeks[0]}-{target_weeks[-1]}"
+                            ),
                             body=(
                                 "Please find attached the Capacity vs 4 Weeks production report "
                                 f"for weeks {target_weeks[0]}–{target_weeks[-1]}."
@@ -265,7 +309,11 @@ if "report_bytes" in st.session_state:
 st.markdown(
     """
     <div class="jay-footer">
-    Machines and Shifts are editable in the downloaded report — Capacity and % update automatically.
+    The workbook also holds the hidden sheets <i>Source Calculations</i> and the changeover sheets
+    (right-click a tab → Unhide). Machines and Shifts are editable in the downloaded report —
+    Capacity, % and the TOTAL rows update automatically.
+    <b>Changeovers:</b> per machine, per shift — Brand = distinct FG items − 1,
+    Blend = distinct blends − 1 (Production rows only), summed by machine line and week.
     </div>
     """,
     unsafe_allow_html=True,

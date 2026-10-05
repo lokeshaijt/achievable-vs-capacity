@@ -300,7 +300,6 @@ def _styles():
         "PCT_BODY_FILL": PatternFill(start_color="FF92D050", end_color="FF92D050", fill_type="solid"),
         "TOTAL_FILL":   PatternFill(start_color="FFCDC4A0", end_color="FFCDC4A0", fill_type="solid"),
         "REGION_FILL":  PatternFill(start_color="FFD6D6D6", end_color="FFD6D6D6", fill_type="solid"),
-        "INPUT_FILL":   PatternFill(start_color="FFFFF2CC", end_color="FFFFF2CC", fill_type="solid"),
         "TITLE_L_FONT": Font(name=FN, bold=True, size=14, color="FF8B1A1A"),
         "TITLE_C_FONT": Font(name=FN, bold=True, size=12, color="FFFFFFFF"),
         "HDR_FONT":     Font(name=FN, bold=True, size=10),
@@ -453,9 +452,9 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
         line_rows[row] = line
         ws.cell(row, 3, line).font = S["NORM"]
         ws.cell(row, 3).border = BORDER
-        for c, v in ((4, nm), (5, ns)):                               # yellow inputs
+        for c, v in ((4, nm), (5, ns)):                               # editable inputs
             cell = ws.cell(row, c, v)
-            cell.font, cell.fill, cell.border = S["NORM"], S["INPUT_FILL"], BORDER
+            cell.font, cell.border = S["NORM"], BORDER
             cell.alignment = Alignment(horizontal="right", vertical="center")
 
         f = MC_FACTORS.get(line, {})

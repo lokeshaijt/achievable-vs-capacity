@@ -17,7 +17,7 @@ report in the finalized format (sheet name, title, column widths and colour pale
 |---|---|---|---|---|
 | Region / Sub / Machine Line / Machines / Shifts / **Capacity (In FCL)** | **By container** — achieved containers per week | **By Percentage** — achieved ÷ capacity | **Blend Changeover** per week | **Brand Changeover** per week |
 
-- Machines (D) and Shifts (E) are yellow inputs. **Capacity (F)** is always a live formula — including
+- Machines (D) and Shifts (E) are the editable inputs. **Capacity (F)** is always a live formula — including
   lines that start at 0 Shifts — so F, the % columns and the TOTAL rows recalculate when you change them.
 - TOTAL rows are `SUM` formulas; the % TOTAL is `SUM(achieved) ÷ SUM(capacity)`.
 - Values over capacity are shown in red. Lines with 0 shifts show "-" for achieved containers.

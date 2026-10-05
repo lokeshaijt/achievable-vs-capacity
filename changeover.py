@@ -405,7 +405,8 @@ _GREEN = PatternFill(start_color="FF92D050", end_color="FF92D050", fill_type="so
 _CO_FMT = '#,##0;\\-#,##0;\\-'
 
 
-def write_changeover_columns(ws, refs, first_col, weeks, line_rows, total_groups, footer_row=None):
+def write_changeover_columns(ws, refs, first_col, weeks, line_rows, total_groups, footer_row=None,
+                             line_col="C"):
     """
     first_col    : first column of the Blend block (Brand block follows it)
     weeks        : e.g. [36, 37, 38, 39]
@@ -413,6 +414,7 @@ def write_changeover_columns(ws, refs, first_col, weeks, line_rows, total_groups
     total_groups : {TOTAL row: (first row, last row)} of the lines it adds up
     footer_row   : row for the all-machines changeover total (None = none). It has no label and
                    covers every machine, including work centers that have no line in the report.
+    line_col     : column letter of the report's "Machine Line" column
     """
     n = len(weeks)
     blocks = [("Blend Changeover", first_col, refs["calc_blend"], _BLEND_HDR1, _BLEND_HDR2, None),
@@ -438,7 +440,7 @@ def write_changeover_columns(ws, refs, first_col, weeks, line_rows, total_groups
             for i in range(n):
                 col = c0 + i
                 cell = ws.cell(r, col,
-                               f"=SUMIFS({rng},{refs['calc_line']},$C{r},{refs['calc_week']},{week_expr(col)})")
+                               f"=SUMIFS({rng},{refs['calc_line']},${line_col}{r},{refs['calc_week']},{week_expr(col)})")
                 cell.font, cell.border, cell.number_format = _NORM, _BLACK, _CO_FMT
                 cell.alignment = Alignment(horizontal="right")
                 if body_fill is not None:
@@ -463,9 +465,10 @@ def write_changeover_columns(ws, refs, first_col, weeks, line_rows, total_groups
 
 
 def add_changeover(wb, ws, pr_src, fg_src, routing_map, report_lines, weeks, first_col,
-                   line_rows, total_groups, footer_row=None, week1_monday=DEFAULT_WEEK1_MONDAY):
+                   line_rows, total_groups, footer_row=None, week1_monday=DEFAULT_WEEK1_MONDAY,
+                   line_col="C"):
     """One call: build the model, write the supporting sheets and the two column blocks."""
     model = build_model(pr_src, fg_src, routing_map, report_lines)
     refs = write_changeover_sheets(wb, model, report_lines, week1_monday)
-    write_changeover_columns(ws, refs, first_col, weeks, line_rows, total_groups, footer_row)
+    write_changeover_columns(ws, refs, first_col, weeks, line_rows, total_groups, footer_row, line_col)
     return model

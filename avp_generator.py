@@ -30,50 +30,51 @@ SOURCE_SHEET = "Source Calculations"
 CAPACITY_HEADER = "Capacity(In\nFCL)"
 EFFICIENCY = 0.9          # the capacity column uses 90% for every line
 
-COL_WIDTHS = {"A": 9.42578125, "B": 9.140625, "C": 23.7109375}   # D .. last column: WEEK_COL_WIDTH
+COL_WIDTHS = {"A": 9.0, "B": 9.42578125, "C": 9.140625, "D": 23.7109375}   # E .. last column: WEEK_COL_WIDTH
 WEEK_COL_WIDTH = 7.42578125
 HELPER_WIDTH = 9.0
 
-# ── Layout: region, sub-group, machine line, machines, shifts ────────────────
-# (machines / shifts are the yellow input cells of the report)
+# ── Layout: zone, region, sub-group, machine line, machines, shifts ──────────
+# (machines / shifts are the editable input cells of the report; grouped and
+#  sorted Zone 1 -> Zone 2 -> Zone 3, region/classification order inside each)
 LAYOUT = [
-    ("AFRICA",    "DC",         "C250 AF",                  2,   2),
-    (None,        None,         "CONSTANTA ENV",            32,  2),
-    (None,        None,         "PERFECTA ENV",             3,   2),
-    (None,        None,         "MD20 ENV",                 2,   2),
-    ("__TOTAL__", None,         None,                       None, None),
-    (None,        "SC",         "MAISA TAGLESS",            7,   1),
-    ("__TOTAL__", None,         None,                       None, None),
-    (None,        "PREMIX",     "INSTANT COFFEE STICK PACK", 1,  1),
-    (None,        None,         "Instant Tea",              1,   1),
-    (None,        None,         "PEARL PACK-PREMIX",        2,   1),
-    (None,        None,         "VIKING-MULTITRACK",        1,   1),
-    ("__TOTAL__", None,         None,                       None, None),
-    ("AUSTRALIA", "DC TAG",     "CONSTANTA TAG (D)",        5,   1),
-    ("__TOTAL__", None,         None,                       None, None),
-    ("EUROPE",    "DC SF CRIMP", "C250",                     3,   2),
-    (None,        None,         "VARIETIES PACK",           1,   2),
-    (None,        None,         "MD20 ENV GARANT",          2,   2),
-    ("__TOTAL__", None,         None,                       None, None),
-    (None,        "DC TAG",     "PERFECTA  K 45 TAG",       1,   2),
-    (None,        None,         "MD20 4GM TAG",             1,   1),
-    ("__TOTAL__", None,         None,                       None, None),
-    (None,        "SC",         "UNIVERSAL POT BAG",        1,   1),
-    (None,        None,         "UNIVERSAL TWIN BAG",       1,   1),
-    ("__TOTAL__", None,         None,                       None, None),
-    (None,        "MISC",       "C250F3 HS",                1,   0),
-    (None,        None,         "MD20 HS",                  2,   2),
-    ("__TOTAL__", None,         None,                       None, None),
-    ("RUSSIA",    "DC TAG",     "CONSTANTA TAG",            3,   1),
-    ("__TOTAL__", None,         None,                       None, None),
-    ("USA",       "TREE HOUSE", "BREW MAGIC",               1,   1),
-    (None,        None,         "C250-A",                   3,   2),
-    (None,        None,         "MAISA ENV",                2,   1),
-    (None,        None,         "PERFACTA TAG",             2,   2),
-    (None,        None,         "CONSTANTA FAMILY SIZE",    2,   2),
-    (None,        "HF Co",      "Pearl Pack-FFS POUCH",     1.5, 1),
-    (None,        None,         "C250F3 ENV",               1,   0),
-    ("__TOTAL__", None,         None,                       None, None),
+    ("Zone 1",    "AFRICA",    "DC",         "C250 AF",                  2,   2),
+    (None,        None,        None,         "CONSTANTA ENV",            32,  2),
+    (None,        None,        None,         "PERFECTA ENV",             3,   2),
+    (None,        None,        None,         "MD20 ENV",                 2,   2),
+    ("__TOTAL__", None,        None,         None,                       None, None),
+    (None,        "AUSTRALIA", "DC TAG",     "CONSTANTA TAG (D)",        5,   1),
+    ("__TOTAL__", None,        None,         None,                       None, None),
+    (None,        "EUROPE",    "DC SF CRIMP", "C250",                    3,   2),
+    (None,        None,        None,         "VARIETIES PACK",           1,   2),
+    (None,        None,        None,         "MD20 ENV GARANT",          2,   2),
+    ("__TOTAL__", None,        None,         None,                       None, None),
+    (None,        None,        "DC TAG",     "PERFECTA  K 45 TAG",       1,   2),
+    (None,        None,        None,         "MD20 4GM TAG",             1,   1),
+    ("__TOTAL__", None,        None,         None,                       None, None),
+    (None,        None,        "MISC",       "C250F3 HS",                1,   0),
+    (None,        None,        None,         "MD20 HS",                  2,   2),
+    (None,        None,        None,         "C250F3 ENV",               1,   0),
+    ("__TOTAL__", None,        None,         None,                       None, None),
+    (None,        "RUSSIA",    "DC TAG",     "CONSTANTA TAG",            3,   1),
+    ("__TOTAL__", None,        None,         None,                       None, None),
+    (None,        "USA",       "TREE HOUSE", "BREW MAGIC",               1,   1),
+    (None,        None,        None,         "C250-A",                   3,   2),
+    (None,        None,        None,         "MAISA ENV",                2,   1),
+    (None,        None,        None,         "PERFACTA TAG",             2,   2),
+    (None,        None,        None,         "CONSTANTA FAMILY SIZE",    2,   2),
+    (None,        None,        "HF Co",      "Pearl Pack-FFS POUCH",     1.5, 1),
+    ("__TOTAL__", None,        None,         None,                       None, None),
+    ("Zone 2",    "AFRICA",    "SC",         "MAISA TAGLESS",            7,   1),
+    ("__TOTAL__", None,        None,         None,                       None, None),
+    (None,        "EUROPE",    "SC",         "UNIVERSAL POT BAG",        1,   1),
+    (None,        None,        None,         "UNIVERSAL TWIN BAG",       1,   1),
+    ("__TOTAL__", None,        None,         None,                       None, None),
+    ("Zone 3",    "AFRICA",    "PREMIX",     "INSTANT COFFEE STICK PACK", 1,  1),
+    (None,        None,        None,         "Instant Tea",              1,   1),
+    (None,        None,        None,         "PEARL PACK-PREMIX",        2,   1),
+    (None,        None,        None,         "VIKING-MULTITRACK",        1,   1),
+    ("__TOTAL__", None,        None,         None,                       None, None),
 ]
 
 # ── Capacity factors per machine line (New capacity — Arul Sir) ──────────────
@@ -343,9 +344,9 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
         achieved[(e["group"], e["wn"])] += e["containers"]
 
     n_weeks = len(target_weeks)
-    CNTR_FIRST = 7                                  # G
-    PCT_FIRST = CNTR_FIRST + n_weeks                # K
-    CO_FIRST = PCT_FIRST + n_weeks                  # O  (Blend block, then Brand block)
+    CNTR_FIRST = 8                                  # H
+    PCT_FIRST = CNTR_FIRST + n_weeks                # L
+    CO_FIRST = PCT_FIRST + n_weeks                  # P  (Blend block, then Brand block)
     LAST_COL = CO_FIRST + 2 * n_weeks - 1 if with_co else PCT_FIRST + n_weeks - 1
     LKP_COL = LAST_COL + 3                          # hidden capacity factors
 
@@ -356,7 +357,7 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
     ws.title = SHEET_NAME
 
     # ── Row 1: title and block headers ──────────────────────────────────────
-    ws.merge_cells("A1:F1")
+    ws.merge_cells("A1:G1")
     ws["A1"] = f"Capacity Vs Produced in last {n_weeks} Weeks"
     ws["A1"].font, ws["A1"].fill = S["TITLE_L_FONT"], S["TITLE_L_FILL"]
     ws["A1"].alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
@@ -370,8 +371,8 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
 
     # ── Row 2: column headers ───────────────────────────────────────────────
     ws.row_dimensions[2].height = 36
-    for c, h in {1: "Region", 2: None, 3: "Machine Line", 4: "No. of\nMachines",
-                 5: "No. of\nShifts", 6: CAPACITY_HEADER}.items():
+    for c, h in {1: "Zone", 2: "Region", 3: None, 4: "Machine Line", 5: "No. of\nMachines",
+                 6: "No. of\nShifts", 7: CAPACITY_HEADER}.items():
         cell = ws.cell(2, c, h)
         cell.font, cell.fill, cell.border = S["HDR_FONT"], S["HDR_FILL"], BORDER
         cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
@@ -384,7 +385,7 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
     # ── Column widths ───────────────────────────────────────────────────────
     for col, w in COL_WIDTHS.items():
         ws.column_dimensions[col].width = w
-    for c in range(4, LAST_COL + 1):
+    for c in range(5, LAST_COL + 1):
         ws.column_dimensions[get_column_letter(c)].width = WEEK_COL_WIDTH
 
     # ── Hidden capacity-factor columns ──────────────────────────────────────
@@ -397,23 +398,23 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
     # ── Data rows ───────────────────────────────────────────────────────────
     row = 3
     pending_merges = []
-    cur_a_start = cur_b_start = None
-    cur_region = cur_sub = None
+    cur_a_start = cur_b_start = cur_c_start = None
+    cur_zone = cur_region = cur_sub = None
     grp_start = row
     line_rows, total_groups = {}, {}
 
-    for region, sub, line, nm, ns in LAYOUT:
+    for zone, region, sub, line, nm, ns in LAYOUT:
         ws.row_dimensions[row].height = 18
 
-        if region == "__TOTAL__":
+        if zone == "__TOTAL__":
             total_groups[row] = (grp_start, row - 1)
             for c in range(1, PCT_FIRST + n_weeks):
                 cell = ws.cell(row, c)
                 cell.border = BORDER
-                if c >= 3:
+                if c >= 4:
                     cell.fill, cell.font = S["TOTAL_FILL"], S["BOLD"]
-            ws.cell(row, 3, "TOTAL")
-            f_cell = ws.cell(row, 6, f"=SUM(F{grp_start}:F{row - 1})")
+            ws.cell(row, 4, "TOTAL")
+            f_cell = ws.cell(row, 7, f"=SUM(G{grp_start}:G{row - 1})")
             f_cell.number_format = S["NUMFMT_CNTR"]
             for i in range(n_weeks):
                 col = get_column_letter(CNTR_FIRST + i)
@@ -421,38 +422,44 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
                 a_cell.number_format = S["NUMFMT_CNTR"]
                 p_cell = ws.cell(row, PCT_FIRST + i,
                                  f'=IFERROR(ROUND(SUM({col}{grp_start}:{col}{row - 1})/'
-                                 f'SUMIF(F{grp_start}:F{row - 1},">0")*100,1),0)')
+                                 f'SUMIF(G{grp_start}:G{row - 1},">0")*100,1),0)')
                 p_cell.number_format = S["NUMFMT_PCT"]
                 p_cell.fill = S["PCT_BODY_FILL"]
             grp_start = row + 1
             row += 1
-            if cur_b_start is not None:
-                pending_merges.append(("B", cur_b_start, row - 2))
-                cur_b_start = None
+            if cur_c_start is not None:
+                pending_merges.append(("C", cur_c_start, row - 2))
+                cur_c_start = None
                 cur_sub = None
             continue
 
-        # region / sub-group labels
-        if region and region != cur_region:
+        # zone / region / classification labels
+        if zone and zone != cur_zone:
             if cur_a_start is not None:
                 pending_merges.append(("A", cur_a_start, row - 1))
-            cur_region, cur_a_start = region, row
-            ws.cell(row, 1, region).font = S["BOLD"]
+            cur_zone, cur_a_start = zone, row
+            ws.cell(row, 1, zone).font = S["BOLD"]
             ws.cell(row, 1).fill = S["REGION_FILL"]
-        if sub and sub != cur_sub:
+        if region and region != cur_region:
             if cur_b_start is not None:
                 pending_merges.append(("B", cur_b_start, row - 1))
-            cur_sub, cur_b_start = sub, row
-            ws.cell(row, 2, sub).font = S["NORM"]
+            cur_region, cur_b_start = region, row
+            ws.cell(row, 2, region).font = S["BOLD"]
+        if sub and sub != cur_sub:
+            if cur_c_start is not None:
+                pending_merges.append(("C", cur_c_start, row - 1))
+            cur_sub, cur_c_start = sub, row
+            ws.cell(row, 3, sub).font = S["NORM"]
             if len(sub) > 10:
-                ws.cell(row, 2).alignment = Alignment(wrap_text=True)
+                ws.cell(row, 3).alignment = Alignment(wrap_text=True)
         ws.cell(row, 1).border = BORDER
         ws.cell(row, 2).border = BORDER
+        ws.cell(row, 3).border = BORDER
 
         line_rows[row] = line
-        ws.cell(row, 3, line).font = S["NORM"]
-        ws.cell(row, 3).border = BORDER
-        for c, v in ((4, nm), (5, ns)):                               # editable inputs
+        ws.cell(row, 4, line).font = S["NORM"]
+        ws.cell(row, 4).border = BORDER
+        for c, v in ((5, nm), (6, ns)):                               # editable inputs
             cell = ws.cell(row, c, v)
             cell.font, cell.border = S["NORM"], BORDER
             cell.alignment = Alignment(horizontal="right", vertical="center")
@@ -462,15 +469,15 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
             ws.cell(row, LKP_COL + i, f.get(key, 0)).font = S["HELPER_FONT"]
 
         zero_cap = (ns == 0)
-        # F and K-N are always live formulas (never a static "-"), so changing
+        # G and L-O are always live formulas (never a static "-"), so changing
         # Machines/Shifts for a line that started at 0 shifts still recalculates.
-        f_cell = ws.cell(row, 6)
+        f_cell = ws.cell(row, 7)
         f_cell.border, f_cell.font = BORDER, S["NORM"]
         f_cell.alignment = Alignment(horizontal="right", vertical="center")
         f_cell.number_format = S["NUMFMT_CNTR"]
         f_cell.value = (
             f'=IFERROR(IF({Tc}{row}=0,"-",'
-            f'ROUND({Qc}{row}*{Rc}{row}*$D{row}*$E{row}*6*0.9/{Sc}{row}/{Tc}{row},3)),"-")')
+            f'ROUND({Qc}{row}*{Rc}{row}*$E{row}*$F{row}*6*0.9/{Sc}{row}/{Tc}{row},3)),"-")')
 
         cap_val = round(compute_capacity(line, nm, ns), 3)
         for i, wn in enumerate(target_weeks):
@@ -491,17 +498,19 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
             p_cell.number_format = S["NUMFMT_PCT"]
             p_cell.font = S["OVER_FONT"] if over else S["NORM"]
             p_cell.value = (
-                f'=IFERROR(IF($F{row}="-","-",IF($F{row}=0,0,ROUND({acol}{row}/$F{row}*100,1))),"-")')
+                f'=IFERROR(IF($G{row}="-","-",IF($G{row}=0,0,ROUND({acol}{row}/$G{row}*100,1))),"-")')
         row += 1
 
     if cur_a_start is not None:
         pending_merges.append(("A", cur_a_start, row - 1))
     if cur_b_start is not None:
         pending_merges.append(("B", cur_b_start, row - 1))
+    if cur_c_start is not None:
+        pending_merges.append(("C", cur_c_start, row - 1))
     for cl, ds, de in pending_merges:
         if de > ds:
             ws.merge_cells(f"{cl}{ds}:{cl}{de}")
-        wrap = cl == "B" and len(str(ws[f"{cl}{ds}"].value or "")) > 10      # e.g. "DC SF CRIMP"
+        wrap = cl == "C" and len(str(ws[f"{cl}{ds}"].value or "")) > 10      # e.g. "DC SF CRIMP"
         ws[f"{cl}{ds}"].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True if wrap else None)
 
     ws.freeze_panes = f"{get_column_letter(CNTR_FIRST)}3"
@@ -512,7 +521,8 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
     if with_co:
         model = changeover.add_changeover(
             wb, ws, pr_bytes, fg_blend_bytes, ROUTING_MAP, list(dict.fromkeys(line_rows.values())),
-            target_weeks, CO_FIRST, line_rows, total_groups, footer_row=row, week1_monday=WEEK1_MONDAY)
+            target_weeks, CO_FIRST, line_rows, total_groups, footer_row=row, week1_monday=WEEK1_MONDAY,
+            line_col="D")
         blend_tot, brand_tot = model.totals
         co_info = {
             "blend_total": blend_tot,
@@ -589,8 +599,8 @@ def _write_source_calculations(wb, entries, target_weeks, S, register_label):
         cell.font, cell.fill, cell.border = white_b, hdr_a, BORDER
         cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
     r = 5
-    for region, sub, line, nm, ns in LAYOUT:
-        if region == "__TOTAL__":
+    for zone, region, sub, line, nm, ns in LAYOUT:
+        if zone == "__TOTAL__":
             continue
         f = MC_FACTORS.get(line, {})
         rate, shmin = f.get("rate", 0), f.get("shiftmin", 0)

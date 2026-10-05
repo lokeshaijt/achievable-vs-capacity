@@ -13,17 +13,19 @@ report in the finalized format (sheet name, title, column widths and colour pale
 
 ### The report sheet
 
-| Cols A–F | G–J | K–N | O–R | S–V |
+| Cols A–G | H–K | L–O | P–S | T–W |
 |---|---|---|---|---|
-| Region / Sub / Machine Line / Machines / Shifts / **Capacity (In FCL)** | **By container** — achieved containers per week | **By Percentage** — achieved ÷ capacity | **Blend Changeover** per week | **Brand Changeover** per week |
+| Zone / Region / Classification / Machine Line / Machines / Shifts / **Capacity (In FCL)** | **By container** — achieved containers per week | **By Percentage** — achieved ÷ capacity | **Blend Changeover** per week | **Brand Changeover** per week |
 
-- Machines (D) and Shifts (E) are the editable inputs. **Capacity (F)** is always a live formula — including
-  lines that start at 0 Shifts — so F, the % columns and the TOTAL rows recalculate when you change them.
+- Rows are grouped and sorted **Zone 1 → Zone 2 → Zone 3**; within a zone, regions and classifications
+  keep the order set in `LAYOUT` (`avp_generator.py`).
+- Machines (E) and Shifts (F) are the editable inputs. **Capacity (G)** is always a live formula — including
+  lines that start at 0 Shifts — so G, the % columns and the TOTAL rows recalculate when you change them.
 - TOTAL rows are `SUM` formulas; the % TOTAL is `SUM(achieved) ÷ SUM(capacity)`.
-- Values over capacity are shown in red. Lines with 0 shifts show "-" for achieved containers.
+- Values over capacity are shown in red.
 - Row 40 (no label, light grey) is the changeover total for **all machines**, including work centers that
   have no line in the report.
-- Capacity factors are hidden in columns Y:AB.
+- Capacity factors are hidden in columns Z:AC.
 
 ## Blend & Brand changeover
 

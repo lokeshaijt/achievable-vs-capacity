@@ -7,25 +7,28 @@ report in the finalized format (sheet name, title, column widths and colour pale
 
 | Sheet | Visible | What it is |
 |---|---|---|
-| `Capacity Vs Production` | yes | the report |
+| `Capacity Vs Production` | yes | capacity vs achieved containers |
+| `Blend Changeover` | yes | blend changeovers per machine line |
+| `Brand Changeover` | yes | brand changeovers per machine line |
 | `Source Calculations` | hidden | how every capacity and every achieved figure is derived |
 | `Changeover Calc` · `Changeover Detail` · `CO Routing` · `FG Blend Map` | hidden | the changeover calculation (right-click a tab → Unhide) |
 
-### The report sheet
+### Each visible sheet
 
-| Cols A–G | H–K | L–O | P–S | T–W |
-|---|---|---|---|---|
-| Zone / Region / Classification / Machine Line / Machines / Shifts / **Capacity (In FCL)** | **By container** — achieved containers per week | **By Percentage** — achieved ÷ capacity | **Blend Changeover** per week | **Brand Changeover** per week |
+Rows: Zone / Region / Classification / Machine Line / Machines / Shifts (+ **Capacity (In FCL)** on the
+Capacity Vs Production sheet only).
+
+Columns: weeks are grouped under their calendar month, each month followed by a SUM column for that
+month (e.g. `W #39 | W #40 | SEP`). The Blend/Brand Changeover sheets also carry an unlabeled footer row —
+the changeover total for **all machines**, including work centers that have no line in the report.
 
 - Rows are grouped and sorted **Zone 1 → Zone 2 → Zone 3**; within a zone, regions and classifications
-  keep the order set in `LAYOUT` (`avp_generator.py`).
-- Machines (E) and Shifts (F) are the editable inputs. **Capacity (G)** is always a live formula — including
-  lines that start at 0 Shifts — so G, the % columns and the TOTAL rows recalculate when you change them.
-- TOTAL rows are `SUM` formulas; the % TOTAL is `SUM(achieved) ÷ SUM(capacity)`.
-- Values over capacity are shown in red.
-- Row 40 (no label, light grey) is the changeover total for **all machines**, including work centers that
-  have no line in the report.
-- Capacity factors are hidden in columns Z:AC.
+  keep the order set in `LAYOUT` (`avp_generator.py`) — identical row order on all three sheets.
+- Machines and Shifts are the editable inputs. **Capacity** is always a live formula — including lines
+  that start at 0 Shifts — so it, and every TOTAL/month-sum cell, recalculate when you change them.
+- TOTAL rows and month-sum columns are `SUM` formulas.
+- Values over capacity are shown in red (Capacity Vs Production only).
+- Capacity factors are hidden in the columns just past the last month-sum column.
 
 ## Blend & Brand changeover
 
@@ -43,8 +46,9 @@ Automates the manual Excel process (Sheet1 → Sheet6 + the two pivots):
 
 - **New FG items:** an FG item that is not in `FG_Blend_Names.xlsx` is treated as its own blend (it can only add a
   changeover, never hide one) and is listed in a warning. Replace the bundled file, or upload the latest one in the app.
-- **Work centers with no report line** (currently FFS POUCH, PAKONA, …) are counted only in row 40. To give one a
-  line, unhide `CO Routing` and change its *Report Line* — everything recalculates.
+- **Work centers with no report line** (currently PAKONA, MD20 ENV GARANT, C250F3 HS, …) are counted only in the
+  footer row of the two changeover sheets. To give one a line, unhide `CO Routing` and change its *Report Line* —
+  everything recalculates.
 - The count follows the manual method exactly: a machine is identified by Date + Shift + Work Center + Machine No,
   so a machine that changes work center inside a shift is not counted as a changeover.
 
@@ -73,6 +77,7 @@ changeover.py                   — Blend / Brand changeover logic + hidden shee
 mailer.py                       — SMTP email delivery for the generated report
 reference_workbook.xlsx         — TBGS PER CTN lookup table
 FG_Blend_Names.xlsx             — FG item → Blend name (used for changeovers)
+MC_Routing_Master.xlsx          — item name → machine line (overrides work-center routing)
 assets/jay_logo.jpg             — JAY logo (header + favicon)
 .streamlit/config.toml          — black/gold theme
 .streamlit/secrets.toml.example — Template for SMTP credentials
@@ -112,7 +117,10 @@ Capacity = Rate × ShiftMin × Machines × Shifts × 6 days × 90% ÷ TBGS/CFC �
 
 - **Machines / shifts / lines:** `LAYOUT` in `avp_generator.py`.
 - **Capacity factors:** `MC_FACTORS` in `avp_generator.py`.
-- **Work center → line:** `ROUTING_MAP` in `avp_generator.py`.
+- **Item name → line (precise, takes priority):** replace `MC_Routing_Master.xlsx` — a "PRODUCT NAME"/"MC ROUTING"
+  sheet. A routing name not recognized by `ITEM_MASTER_LINE_MAP` in `avp_generator.py` is ignored for that item,
+  which then falls back to the work-center map below.
+- **Work center → line (fallback):** `ROUTING_MAP` in `avp_generator.py`.
 - **Look and feel** (sheet name, title, widths, colours): the constants at the top of `avp_generator.py` and `_styles()`.
 
 Push the change — Streamlit Cloud redeploys within a minute.

@@ -173,6 +173,15 @@ class ChangeoverModel:
                 out[c["wc"]][1] += c["items"] - 1
         return {k: tuple(v) for k, v in out.items()}
 
+    def by_week(self, weekno):
+        """{week: (blend_co, brand_co)} across every machine-shift, report line or not."""
+        out = defaultdict(lambda: [0, 0])
+        for c in self.calc:
+            k = weekno(c["date"])
+            out[k][0] += c["blends"] - 1
+            out[k][1] += c["items"] - 1
+        return {k: tuple(v) for k, v in out.items()}
+
 
 def build_model(pr_src, fg_src, routing_map, report_lines):
     rows = read_production_rows(pr_src)

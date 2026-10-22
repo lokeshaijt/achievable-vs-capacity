@@ -38,10 +38,10 @@ HELPER_WIDTH = 9.0
 # (machines / shifts are the editable input cells of the report; grouped and
 #  sorted Zone 1 -> Zone 2 -> Zone 3, region/classification order inside each)
 LAYOUT = [
-    ("Zone 1", "AFRICA",    "DC",          "PERFECTA ENV",              3,  2),
-    (None,     None,        None,          "C250 AF",                   2,  2),
-    (None,     None,        None,          "MD20 ENV",                  4,  2),
-    (None,     None,        None,          "CONSTANTA ENV",             23, 2),
+    ("Zone 1", "AFRICA",    "DC",          "PERFECTA ENV(Black Tea)",   3,  2),
+    (None,     None,        None,          "C250 AF(Black Tea)",        2,  2),
+    (None,     None,        None,          "MD20 ENV(Black Tea)",       4,  2),
+    (None,     None,        None,          "CONSTANTA ENV(Flavour Tea)",23, 2),
     (None,     None,        None,          "CONSTANTA ENV (HERBAL)",    9,  2),
     ("__TOTAL__", None, None, None, None, None),
     (None,     "AUSTRALIA", "DC TAG",      "CONSTANTA TAG",             6,  1),
@@ -83,11 +83,11 @@ LAYOUT = [
 MC_FACTORS = {
     "BREW MAGIC":                     {"rate": 8,   "shiftmin": 540, "tbgs_cfc": 32,   "cfc_cntr": 3600},
     "C250":                           {"rate": 250, "shiftmin": 524, "tbgs_cfc": 480,  "cfc_cntr": 7200},
-    "C250 AF":                        {"rate": 250, "shiftmin": 524, "tbgs_cfc": 1200, "cfc_cntr": 3340},
+    "C250 AF(Black Tea)":             {"rate": 250, "shiftmin": 524, "tbgs_cfc": 1200, "cfc_cntr": 3340},
     "C250-A":                         {"rate": 250, "shiftmin": 524, "tbgs_cfc": 480,  "cfc_cntr": 3600},
     "VARIETIES PACK":                 {"rate": 250, "shiftmin": 524, "tbgs_cfc": 480,  "cfc_cntr": 7200},
     "INSTANT COFFEE STICK PACK":      {"rate": 40,  "shiftmin": 540, "tbgs_cfc": 1350, "cfc_cntr": 3000},
-    "CONSTANTA ENV":                  {"rate": 125, "shiftmin": 553, "tbgs_cfc": 600,  "cfc_cntr": 6375},
+    "CONSTANTA ENV(Flavour Tea)":     {"rate": 125, "shiftmin": 553, "tbgs_cfc": 600,  "cfc_cntr": 6375},
     "CONSTANTA ENV (HERBAL)":         {"rate": 125, "shiftmin": 553, "tbgs_cfc": 1125, "cfc_cntr": 3340},
     "CONSTANTA FAMILY SIZE":          {"rate": 95,  "shiftmin": 540, "tbgs_cfc": 144,  "cfc_cntr": 5720},
     "CONSTANTA TAG":                  {"rate": 120, "shiftmin": 543, "tbgs_cfc": 1200, "cfc_cntr": 2688},
@@ -95,14 +95,14 @@ MC_FACTORS = {
     "MAISA ENV":                      {"rate": 100, "shiftmin": 544, "tbgs_cfc": 1200, "cfc_cntr": 1656},
     "MAISA TAGLESS":                  {"rate": 120, "shiftmin": 555, "tbgs_cfc": 2400, "cfc_cntr": 2800},
     "MD20 4GM TAG":                   {"rate": 125, "shiftmin": 548, "tbgs_cfc": 480,  "cfc_cntr": 4032},
-    "MD20 ENV":                       {"rate": 185, "shiftmin": 528, "tbgs_cfc": 1200, "cfc_cntr": 3340},
+    "MD20 ENV(Black Tea)":            {"rate": 185, "shiftmin": 528, "tbgs_cfc": 1200, "cfc_cntr": 3340},
     "MD20 HS":                        {"rate": 170, "shiftmin": 526, "tbgs_cfc": 300,  "cfc_cntr": 6500},
     "Pearl Pack-FFS POUCH":           {"rate": 10,  "shiftmin": 550, "tbgs_cfc": 24,   "cfc_cntr": 1200},
     "PEARL PACK-PREMIX":              {"rate": 30,  "shiftmin": 550, "tbgs_cfc": 120,  "cfc_cntr": 6000},
     "PEARL PACK-PREMIX - cappuccino": {"rate": 30,  "shiftmin": 550, "tbgs_cfc": 120,  "cfc_cntr": 4800},
     "PERFACTA TAG":                   {"rate": 300, "shiftmin": 525, "tbgs_cfc": 600,  "cfc_cntr": 4620},
     "PERFECTA  K 45 TAG":             {"rate": 250, "shiftmin": 533, "tbgs_cfc": 600,  "cfc_cntr": 5040},
-    "PERFECTA ENV":                   {"rate": 280, "shiftmin": 523, "tbgs_cfc": 1200, "cfc_cntr": 3340},
+    "PERFECTA ENV(Black Tea)":        {"rate": 280, "shiftmin": 523, "tbgs_cfc": 1200, "cfc_cntr": 3340},
     "Shubam-FFS POUCH":               {"rate": 190, "shiftmin": 530, "tbgs_cfc": 0,    "cfc_cntr": 0},
     "UNIVERSAL POT BAG":              {"rate": 272, "shiftmin": 540, "tbgs_cfc": 960,  "cfc_cntr": 0},
     "UNIVERSAL TWIN BAG":             {"rate": 420, "shiftmin": 541, "tbgs_cfc": 960,  "cfc_cntr": 3320},
@@ -114,7 +114,7 @@ MC_FACTORS = {
 ROUTING_MAP = {
     "BREW MAGIC":                "BREW MAGIC",
     "C250":                      "C250",
-    "C250 AF":                   "C250 AF",
+    "C250 AF":                   "C250 AF(Black Tea)",
     "C250-A":                    "C250-A",
     "CONSTANTA TAG (D)":         "CONSTANTA TAG",
     "INSTANT COFFEE STICK PACK": "INSTANT COFFEE STICK PACK",
@@ -122,25 +122,25 @@ ROUTING_MAP = {
     "MAISA ENV":                 "MAISA ENV",
     "MAISA TAGLESS":             "MAISA TAGLESS",
     "MD20 4GM TAG":              "MD20 4GM TAG",
-    "MD20 ENV":                  "MD20 ENV",
+    "MD20 ENV":                  "MD20 ENV(Black Tea)",
     "MD20 HS":                   "MD20 HS",
     "PERFACTA TAG":              "PERFACTA TAG",
     "PERFECTA  K 45 TAG":        "PERFECTA  K 45 TAG",
-    "PERFECTA ENV":              "PERFECTA ENV",
+    "PERFECTA ENV":              "PERFECTA ENV(Black Tea)",
     "FFS POUCH":                 "Pearl Pack-FFS POUCH",
     "FFS POUCH - 13G- 40G":      "Pearl Pack-FFS POUCH",
     "UNIVERSAL POT BAG":         "UNIVERSAL POT BAG",
     "UNIVERSAL TWIN BAG":        "UNIVERSAL TWIN BAG",
     "VARIETIES PACK":            "VARIETIES PACK",
     "VIKING-MULTITRACK":         "VIKING-MULTITRACK",
-    "CONSTANTA ENV":             "CONSTANTA ENV",
-    "CONSTANTA ENV BT":          "CONSTANTA ENV",
-    "CONSTANTA ENV BT 25":       "CONSTANTA ENV",
-    "CONSTANTA ENV F":           "CONSTANTA ENV",
-    "CONSTANTA ENV G":           "CONSTANTA ENV",
-    "CONSTANTA ENV H":           "CONSTANTA ENV",
-    "CONSTANTA ENV HF":          "CONSTANTA ENV",
-    "CONSTANTA ENV M":           "CONSTANTA ENV",
+    "CONSTANTA ENV":             "CONSTANTA ENV(Flavour Tea)",
+    "CONSTANTA ENV BT":          "CONSTANTA ENV(Flavour Tea)",
+    "CONSTANTA ENV BT 25":       "CONSTANTA ENV(Flavour Tea)",
+    "CONSTANTA ENV F":           "CONSTANTA ENV(Flavour Tea)",
+    "CONSTANTA ENV G":           "CONSTANTA ENV(Flavour Tea)",
+    "CONSTANTA ENV H":           "CONSTANTA ENV(Flavour Tea)",
+    "CONSTANTA ENV HF":          "CONSTANTA ENV(Flavour Tea)",
+    "CONSTANTA ENV M":           "CONSTANTA ENV(Flavour Tea)",
     "PEARL PACK-PREMIX":         "PEARL PACK-PREMIX",
 }
 
@@ -154,16 +154,16 @@ HERBAL_ITEMS = {
 # MC Routing Master line names -> this file's LAYOUT line names (None = no
 # home in the current report, so items routed there are dropped).
 ITEM_MASTER_LINE_MAP = {
-    "CONSTANTA ENV":                "CONSTANTA ENV",
+    "CONSTANTA ENV":                "CONSTANTA ENV(Flavour Tea)",
     "CONSTANTA ENV H":              "CONSTANTA ENV (HERBAL)",
     "C250":                         "C250",
-    "C250 AF":                      "C250 AF",
+    "C250 AF":                      "C250 AF(Black Tea)",
     "C250-A":                       "C250-A",
     "MD20 HS":                      "MD20 HS",
     "Pearl Pack-FFS POUCH":         "Pearl Pack-FFS POUCH",
-    "MD20 ENV":                     "MD20 ENV",
+    "MD20 ENV":                     "MD20 ENV(Black Tea)",
     "PERFACTA TAG":                 "PERFACTA TAG",
-    "PERFECTA ENV":                 "PERFECTA ENV",
+    "PERFECTA ENV":                 "PERFECTA ENV(Black Tea)",
     "VARIETIES PACK":               "VARIETIES PACK",
     "Pearl Pack-Premix":            "PEARL PACK-PREMIX",
     "Pearl Pack Premix":            "PEARL PACK-PREMIX",
@@ -413,12 +413,20 @@ def _styles():
 # ── Generic month+week grouped sheet writer ──────────────────────────────────
 
 def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
-                        use_active=False, footer_fn=None):
+                        use_active=False, footer_fn=None, grand_total=False, co_ratio_week=None):
     """One sheet: Zone/Region/Classification/Machine Line/Machines/Shifts, then
     (optionally) a live Capacity column, then value_fn(line, week) grouped by
-    month with a per-month SUM column. Returns {row: line name}."""
+    month with a per-month SUM column. Returns {row: line name}.
+
+    grand_total     : add a trailing "Grand Total" row, summing only the
+                       per-classification TOTAL rows (never the data rows
+                       themselves) so nothing is double-counted.
+    co_ratio_week   : if given, add a trailing "Changeover/MC/Shift
+                       (Week N)" column = that week's value ÷ Machines ÷ 12
+                       (blank "-" wherever Machines is blank, i.e. on TOTAL
+                       rows)."""
     BORDER = S["BORDER"]
-    VALUE_START = 8 if with_capacity else 7
+    VALUE_START = 9 if with_capacity else 7
 
     ws = wb.active if use_active else wb.create_sheet(title)
     ws.title = title
@@ -444,6 +452,7 @@ def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
                5: "No. of\nMachines", 6: "No. of\nShifts"}
     if with_capacity:
         headers[7] = CAPACITY_HEADER
+        headers[8] = "Month\nCapacity"
     for c, h in headers.items():
         cell = ws.cell(2, c, h)
         cell.font, cell.fill, cell.border = S["HDR_FONT"], S["HDR_FILL"], BORDER
@@ -497,6 +506,8 @@ def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
             if with_capacity:
                 f_cell = ws.cell(row, 7, f"=SUM(G{grp_start}:G{row - 1})")
                 f_cell.number_format = S["NUMFMT_CNTR"]
+                mc_cell = ws.cell(row, 8, f"=G{row}*4")
+                mc_cell.number_format = S["NUMFMT_CNTR"]
             for col in list(week_col.values()) + [tc for _, tc in month_span.values()]:
                 cl = get_column_letter(col)
                 a_cell = ws.cell(row, col, f"=SUM({cl}{grp_start}:{cl}{row - 1})")
@@ -557,6 +568,11 @@ def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
                 f'=IFERROR(IF({Tc}{row}=0,"-",'
                 f'ROUND({Qc}{row}*{Rc}{row}*$E{row}*$F{row}*6*0.9/{Sc}{row}/{Tc}{row},3)),"-")')
 
+            mc_cell = ws.cell(row, 8, f'=IF(G{row}="-","-",G{row}*4)')
+            mc_cell.border, mc_cell.font, mc_cell.fill = BORDER, S["NORM"], S["REGION_FILL"]
+            mc_cell.alignment = Alignment(horizontal="right", vertical="center")
+            mc_cell.number_format = S["NUMFMT_CNTR"]
+
         for wn, col in week_col.items():
             val = value_fn(line, wn)
             over = bool(with_capacity and cap_val and val and val > cap_val)
@@ -588,6 +604,25 @@ def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
         wrap = cl == "C" and len(str(ws[f"{cl}{ds}"].value or "")) > 10      # e.g. "DC SF CRIMP"
         ws[f"{cl}{ds}"].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True if wrap else None)
 
+    data_end_row = row          # one past the last data/TOTAL row (before any footer/grand-total)
+
+    # ── Trailing "Changeover/MC/Shift (Week N)" column ────────────────────
+    if co_ratio_week is not None and co_ratio_week in week_col:
+        extra_col = LAST_COL + 1
+        wk_letter = get_column_letter(week_col[co_ratio_week])
+        header_cell = ws.cell(1, extra_col, f"Changeover/MC/Shift\n(Week {co_ratio_week})")
+        ws.merge_cells(start_row=1, start_column=extra_col, end_row=2, end_column=extra_col)
+        header_cell.font, header_cell.fill, header_cell.border = S["HDR_FONT"], S["HDR_FILL"], BORDER
+        header_cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+        ws.cell(2, extra_col).border = BORDER
+        ws.column_dimensions[get_column_letter(extra_col)].width = 14
+        for r in range(3, data_end_row):
+            cell = ws.cell(r, extra_col, f'=IFERROR(ROUND({wk_letter}{r}/$E{r}/12,2),"-")')
+            cell.border = BORDER
+            cell.font = S["NORM"]
+            cell.alignment = Alignment(horizontal="right", vertical="center")
+        LAST_COL = extra_col
+
     # ── Footer row: all-machines total, including work centers with no line ──
     if footer_fn is not None:
         ws.row_dimensions[row].height = 18
@@ -599,6 +634,28 @@ def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
         for total_col, formula in month_total_formula(row).items():
             cell = ws.cell(row, total_col, formula)
             cell.border, cell.font, cell.number_format = BORDER, S["NORM"], S["NUMFMT_CNTR"]
+            cell.alignment = Alignment(horizontal="right", vertical="center")
+        row += 1
+
+    # ── Grand Total row: sums only the per-classification TOTAL rows, so
+    #    nothing already counted inside a TOTAL row is counted twice ──────
+    if grand_total:
+        ws.row_dimensions[row].height = 18
+        total_rows = sorted(total_groups.keys())
+        label_cell = ws.cell(row, 1, "Grand Total")
+        label_cell.font = S["BOLD"]
+        for c in range(1, LAST_COL + 1):
+            cell = ws.cell(row, c)
+            cell.border = BORDER
+            if c >= 4:
+                cell.fill, cell.font = S["TOTAL_FILL"], S["BOLD"]
+        cols_to_sum = ([7, 8] if with_capacity else []) + list(week_col.values()) + [tc for _, tc in month_span.values()]
+        for c in cols_to_sum:
+            cl = get_column_letter(c)
+            formula = "=" + "+".join(f"{cl}{r}" for r in total_rows)
+            cell = ws.cell(row, c, formula)
+            cell.font = S["BOLD"]
+            cell.number_format = S["NUMFMT_CNTR"]
             cell.alignment = Alignment(horizontal="right", vertical="center")
         row += 1
 
@@ -806,15 +863,15 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
     line_rows = _write_group_sheet(
         wb, SHEET_NAME, month_groups, S,
         value_fn=lambda line, wn: achieved.get((line, wn), 0),
-        with_capacity=True, use_active=True)
+        with_capacity=True, use_active=True, grand_total=True)
 
-    main_week_col_n, main_month_span_n, _ = _block_columns(8, month_groups)
+    main_week_col_n, main_month_span_n, _ = _block_columns(9, month_groups)
     main_week_col = {wn: get_column_letter(c) for wn, c in main_week_col_n.items()}
     main_month_span = {label: (get_column_letter(s), get_column_letter(e))
                         for label, (s, e) in main_month_span_n.items()}
     _write_efficiency_sheet(wb, "Efficiency", month_groups, S, SHEET_NAME, main_week_col, main_month_span)
 
-    co_info, model = None, None
+    co_info, model, by_lw = None, None, None
     if with_co:
         report_lines = list(dict.fromkeys(line_rows.values()))
         model = changeover.build_model(pr_bytes, fg_blend_bytes, ROUTING_MAP, report_lines)
@@ -825,11 +882,13 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
         _write_group_sheet(
             wb, "Blend Changeover", month_groups, S,
             value_fn=lambda line, wn: by_lw.get((line, wn), (0, 0))[0],
-            with_capacity=False, footer_fn=lambda wn: by_w.get(wn, (0, 0))[0])
+            with_capacity=False, footer_fn=lambda wn: by_w.get(wn, (0, 0))[0],
+            co_ratio_week=target_weeks[-1])
         _write_group_sheet(
             wb, "Brand Changeover", month_groups, S,
             value_fn=lambda line, wn: by_lw.get((line, wn), (0, 0))[1],
-            with_capacity=False, footer_fn=lambda wn: by_w.get(wn, (0, 0))[1])
+            with_capacity=False, footer_fn=lambda wn: by_w.get(wn, (0, 0))[1],
+            co_ratio_week=target_weeks[-1])
 
         blend_tot, brand_tot = model.totals
         co_info = {
@@ -840,10 +899,12 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
             "machine_shifts": len(model.calc),
         }
 
+    _write_observations_sheet(wb, S, achieved, target_weeks, by_lw)
+
     # ── Source Calculations (hidden) ────────────────────────────────────────
     _write_source_calculations(wb, entries, target_weeks, S, register_date_label(pr_bytes))
     hidden_sheets = [SOURCE_SHEET]
-    order = [SHEET_NAME, "Efficiency", "Blend Changeover", "Brand Changeover", SOURCE_SHEET]
+    order = [SHEET_NAME, "Efficiency", "Blend Changeover", "Brand Changeover", "Observations", SOURCE_SHEET]
     if with_co:
         hidden_sheets += [changeover.SHEET_CALC, changeover.SHEET_DETAIL,
                           changeover.SHEET_ROUTING, changeover.SHEET_FG]
@@ -859,6 +920,103 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
     wb.save(buf)
     buf.seek(0)
     return buf.getvalue(), skipped, co_info
+
+
+# ── Observations sheet ───────────────────────────────────────────────────────
+
+def _write_observations_sheet(wb, S, achieved, target_weeks, by_lw):
+    """5 points on the worst-performing machines (lowest capacity %), plus the
+    highest-changeover lines for Blend and Brand — all over the last 2 weeks
+    of the range. Only lines that actually ran (produced > 0) are considered
+    for the efficiency points."""
+    ws = wb.create_sheet("Observations")
+    last2 = target_weeks[-2:] if len(target_weeks) >= 2 else target_weeks[:]
+    wk_label = f"Week {last2[0]}" if len(last2) == 1 else f"Weeks {last2[0]}–{last2[-1]}"
+
+    stats = []
+    for zone, region, sub, line, nm, ns in LAYOUT:
+        if zone == "__TOTAL__":
+            continue
+        cap_week = compute_capacity(line, nm, ns)
+        ach = sum(achieved.get((line, wn), 0) for wn in last2)
+        if not cap_week or ach <= 0:
+            continue
+        cap_total = cap_week * len(last2)
+        pct = ach / cap_total * 100
+        stats.append((line, pct, ach, cap_total))
+    stats.sort(key=lambda t: t[1])
+    worst = stats[:5]
+
+    def co_stats(idx):
+        """[(line, count)] over last2, highest first, for blend (idx=0) or brand (idx=1)."""
+        if by_lw is None:
+            return []
+        totals = defaultdict(int)
+        for zone, region, sub, line, nm, ns in LAYOUT:
+            if zone == "__TOTAL__":
+                continue
+            totals[line] += sum(by_lw.get((line, wn), (0, 0))[idx] for wn in last2)
+        out = [(line, c) for line, c in totals.items() if c > 0]
+        out.sort(key=lambda t: -t[1])
+        return out[:3]
+
+    ws.merge_cells("A1:F1")
+    ws["A1"] = "Observations"
+    ws["A1"].font, ws["A1"].fill = S["TITLE_L_FONT"], S["TITLE_L_FILL"]
+    ws["A1"].alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
+    ws.row_dimensions[1].height = 24
+
+    row = 3
+
+    def section(heading, points, empty_msg):
+        nonlocal row
+        ws.merge_cells(f"A{row}:F{row}")
+        cell = ws.cell(row, 1, heading)
+        cell.font = Font(name=S["FN"], italic=True, size=10, color="FF444444")
+        cell.alignment = Alignment(horizontal="left", vertical="center")
+        ws.row_dimensions[row].height = 18
+        row += 1
+        if not points:
+            ws.merge_cells(f"A{row}:F{row}")
+            ws.cell(row, 1, empty_msg).font = Font(name=S["FN"], size=11)
+            ws.row_dimensions[row].height = 18
+            row += 1
+        else:
+            for i, text in enumerate(points, 1):
+                ws.merge_cells(f"A{row}:F{row}")
+                cell = ws.cell(row, 1, f"{i}. {text}")
+                cell.font = Font(name=S["FN"], size=11)
+                cell.alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
+                ws.row_dimensions[row].height = 18
+                row += 1
+        row += 1       # blank spacer row between sections
+
+    section(
+        f"Poorest-performing machines, {wk_label} (ran machines only, by % of capacity)",
+        [f"{line} ran at only {pct:.1f}% of capacity in {wk_label} "
+         f"({ach:.1f} of {cap_total:.1f} containers achievable)."
+         for line, pct, ach, cap_total in worst],
+        "No machine ran below capacity in this window.")
+
+    def co_text(co_list, kind):
+        out = []
+        for i, (line, count) in enumerate(co_list):
+            tag = " — the most of any line" if i == 0 else ""
+            out.append(f"{line} had {count} {kind} changeovers in {wk_label}{tag}.")
+        return out
+
+    section(
+        f"Highest Blend changeovers, {wk_label}",
+        co_text(co_stats(0), "Blend"),
+        "No Blend changeover data available." if by_lw is None else "No Blend changeovers in this window.")
+
+    section(
+        f"Highest Brand changeovers, {wk_label}",
+        co_text(co_stats(1), "Brand"),
+        "No Brand changeover data available." if by_lw is None else "No Brand changeovers in this window.")
+
+    ws.column_dimensions["A"].width = 110
+    ws.sheet_view.showGridLines = False
 
 
 # ── Source Calculations sheet ────────────────────────────────────────────────

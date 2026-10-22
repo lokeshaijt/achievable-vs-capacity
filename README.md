@@ -8,6 +8,7 @@ report in the finalized format (sheet name, title, column widths and colour pale
 | Sheet | Visible | What it is |
 |---|---|---|
 | `Capacity Vs Production` | yes | capacity vs achieved containers |
+| `Efficiency` | yes | capacity vs achieved, in % — live formulas off the Capacity Vs Production sheet |
 | `Blend Changeover` | yes | blend changeovers per machine line |
 | `Brand Changeover` | yes | brand changeovers per machine line |
 | `Source Calculations` | hidden | how every capacity and every achieved figure is derived |
@@ -23,7 +24,9 @@ month (e.g. `W #39 | W #40 | SEP`). The Blend/Brand Changeover sheets also carry
 the changeover total for **all machines**, including work centers that have no line in the report.
 
 - Rows are grouped and sorted **Zone 1 → Zone 2 → Zone 3**; within a zone, regions and classifications
-  keep the order set in `LAYOUT` (`avp_generator.py`) — identical row order on all three sheets.
+  keep the order set in `LAYOUT` (`avp_generator.py`) — identical row order on all four sheets.
+- Efficiency's month-sum column is a weighted average (`month achieved ÷ (capacity × weeks in that
+  month)`), not a sum of percentages.
 - Machines and Shifts are the editable inputs. **Capacity** is always a live formula — including lines
   that start at 0 Shifts — so it, and every TOTAL/month-sum cell, recalculate when you change them.
 - TOTAL rows and month-sum columns are `SUM` formulas.

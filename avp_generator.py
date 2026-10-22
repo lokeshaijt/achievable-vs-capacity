@@ -610,6 +610,156 @@ def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
     return line_rows
 
 
+def _write_efficiency_sheet(wb, title, month_groups, S, main_sheet, main_week_col, main_month_span):
+    """Capacity Vs Production, in %. Every cell is a live formula referencing
+    the main sheet's Capacity (col G) and achieved columns, so it recalculates
+    when Machines/Shifts change there — no independent achieved computation."""
+    BORDER = S["BORDER"]
+    VALUE_START = 7
+    ws = wb.create_sheet(title)
+
+    week_col, month_span, next_col = _block_columns(VALUE_START, month_groups)
+    LAST_COL = next_col - 1
+
+    ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=VALUE_START - 1)
+    ws.cell(1, 1, title)
+    ws.cell(1, 1).font, ws.cell(1, 1).fill = S["TITLE_L_FONT"], S["TITLE_L_FILL"]
+    ws.cell(1, 1).alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
+    for label, (span_start, total_col) in month_span.items():
+        ws.merge_cells(start_row=1, start_column=span_start, end_row=1, end_column=total_col)
+        c = ws.cell(1, span_start, label)
+        c.font, c.fill = S["TITLE_C_FONT"], S["TITLE_C_FILL"]
+        c.alignment = Alignment(horizontal="center", vertical="center")
+    ws.row_dimensions[1].height = 24
+
+    ws.row_dimensions[2].height = 36
+    for c, h in {1: "Zone", 2: "Region", 3: None, 4: "Machine Line",
+                 5: "No. of\nMachines", 6: "No. of\nShifts"}.items():
+        cell = ws.cell(2, c, h)
+        cell.font, cell.fill, cell.border = S["HDR_FONT"], S["HDR_FILL"], BORDER
+        cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+    for wn, col in week_col.items():
+        cell = ws.cell(2, col, week_label(wn))
+        cell.font, cell.fill, cell.border = S["WEEK_HDR_FONT"], S["CNTR_HDR_FILL"], BORDER
+        cell.alignment = Alignment(horizontal="center", vertical="center")
+    for label, (_, total_col) in month_span.items():
+        cell = ws.cell(2, total_col, label)
+        cell.font, cell.fill, cell.border = S["BOLD"], S["TOTAL_FILL"], BORDER
+        cell.alignment = Alignment(horizontal="center", vertical="center")
+
+    for col, w in COL_WIDTHS.items():
+        ws.column_dimensions[col].width = w
+    for c in range(5, LAST_COL + 1):
+        ws.column_dimensions[get_column_letter(c)].width = WEEK_COL_WIDTH
+
+    row = 3
+    pending_merges = []
+    cur_a_start = cur_b_start = cur_c_start = None
+    cur_zone = cur_region = cur_sub = None
+    grp_start = row
+
+    month_weeks = {label: weeks for label, weeks in month_groups}
+
+    for zone, region, sub, line, nm, ns in LAYOUT:
+        ws.row_dimensions[row].height = 18
+
+        if zone == "__TOTAL__":
+            for c in range(1, LAST_COL + 1):
+                cell = ws.cell(row, c)
+                cell.border = BORDER
+                if c >= 4:
+                    cell.fill, cell.font = S["TOTAL_FILL"], S["BOLD"]
+            ws.cell(row, 4, "TOTAL")
+            for wn, col in week_col.items():
+                mcol = main_week_col[wn]
+                cell = ws.cell(row, col,
+                    f'=IFERROR(ROUND(SUM(\'{main_sheet}\'!{mcol}{grp_start}:{mcol}{row - 1})/'
+                    f'SUMIF(\'{main_sheet}\'!G{grp_start}:G{row - 1},">0")*100,1),0)')
+                cell.number_format = S["NUMFMT_PCT"]
+            for label, (span_start, total_col) in month_span.items():
+                weeks = month_weeks[label]
+                c1, c2 = main_week_col[weeks[0]], main_week_col[weeks[-1]]
+                cell = ws.cell(row, total_col,
+                    f'=IFERROR(ROUND(SUM(\'{main_sheet}\'!{c1}{grp_start}:{c2}{row - 1})/'
+                    f'(SUMIF(\'{main_sheet}\'!G{grp_start}:G{row - 1},">0")*{len(weeks)})*100,1),0)')
+                cell.number_format = S["NUMFMT_PCT"]
+            grp_start = row + 1
+            row += 1
+            if cur_c_start is not None:
+                pending_merges.append(("C", cur_c_start, row - 2))
+                cur_c_start = None
+                cur_sub = None
+            continue
+
+        if zone and zone != cur_zone:
+            if cur_a_start is not None:
+                pending_merges.append(("A", cur_a_start, row - 1))
+            cur_zone, cur_a_start = zone, row
+            ws.cell(row, 1, zone).font = S["BOLD"]
+            ws.cell(row, 1).fill = S["REGION_FILL"]
+        if region and region != cur_region:
+            if cur_b_start is not None:
+                pending_merges.append(("B", cur_b_start, row - 1))
+            cur_region, cur_b_start = region, row
+            ws.cell(row, 2, region).font = S["BOLD"]
+        if sub and sub != cur_sub:
+            if cur_c_start is not None:
+                pending_merges.append(("C", cur_c_start, row - 1))
+            cur_sub, cur_c_start = sub, row
+            ws.cell(row, 3, sub).font = S["NORM"]
+            if len(sub) > 10:
+                ws.cell(row, 3).alignment = Alignment(wrap_text=True)
+        ws.cell(row, 1).border = BORDER
+        ws.cell(row, 2).border = BORDER
+        ws.cell(row, 3).border = BORDER
+
+        ws.cell(row, 4, line).font = S["NORM"]
+        ws.cell(row, 4).border = BORDER
+        for c, v in ((5, nm), (6, ns)):
+            cell = ws.cell(row, c, v)
+            cell.font, cell.border = S["NORM"], BORDER
+            cell.alignment = Alignment(horizontal="right", vertical="center")
+
+        mcap = f"'{main_sheet}'!G{row}"
+        for wn, col in week_col.items():
+            mcol = main_week_col[wn]
+            cell = ws.cell(row, col,
+                f'=IFERROR(IF({mcap}="-","-",IF({mcap}=0,0,'
+                f'ROUND(\'{main_sheet}\'!{mcol}{row}/{mcap}*100,1))),"-")')
+            cell.border = BORDER
+            cell.font = S["NORM"]
+            cell.number_format = S["NUMFMT_PCT"]
+            cell.alignment = Alignment(horizontal="right", vertical="center")
+        for label, (span_start, total_col) in month_span.items():
+            weeks = month_weeks[label]
+            c1, c2 = main_week_col[weeks[0]], main_week_col[weeks[-1]]
+            cell = ws.cell(row, total_col,
+                f'=IFERROR(ROUND(SUM(\'{main_sheet}\'!{c1}{row}:{c2}{row})/'
+                f'({mcap}*{len(weeks)})*100,1),"-")')
+            cell.border = BORDER
+            cell.font = S["NORM"]
+            cell.number_format = S["NUMFMT_PCT"]
+            cell.alignment = Alignment(horizontal="right", vertical="center")
+        row += 1
+
+    if cur_a_start is not None:
+        pending_merges.append(("A", cur_a_start, row - 1))
+    if cur_b_start is not None:
+        pending_merges.append(("B", cur_b_start, row - 1))
+    if cur_c_start is not None:
+        pending_merges.append(("C", cur_c_start, row - 1))
+    for cl, ds, de in pending_merges:
+        if de > ds:
+            ws.merge_cells(f"{cl}{ds}:{cl}{de}")
+        wrap = cl == "C" and len(str(ws[f"{cl}{ds}"].value or "")) > 10
+        ws[f"{cl}{ds}"].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True if wrap else None)
+
+    ws.freeze_panes = f"{get_column_letter(VALUE_START)}3"
+    ws.sheet_view.showGridLines = False
+    for c in range(1, LAST_COL + 1):
+        ws.cell(1, c).border = BORDER
+
+
 # ── Main report builder ──────────────────────────────────────────────────────
 
 def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
@@ -626,9 +776,11 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
     (bytes, set, dict|None) — xlsx bytes, product names that could not be converted,
                               changeover summary (None when no FG Blend Names file is available)
 
-    Produces three visible sheets — Capacity Vs Production, Blend Changeover,
-    Brand Changeover — each grouped Zone/Region/Classification/Machine Line,
-    with weeks grouped under their month and a per-month SUM column.
+    Produces four visible sheets — Capacity Vs Production, Efficiency, Blend
+    Changeover, Brand Changeover — each grouped Zone/Region/Classification/
+    Machine Line, with weeks grouped under their month and a per-month SUM
+    column. Efficiency is capacity vs achieved in %, as live formulas
+    referencing the Capacity Vs Production sheet.
     """
     target_weeks = list(target_weeks)
     if fg_blend_bytes is None and os.path.exists(DEFAULT_FG_BLEND_FILE):
@@ -655,6 +807,12 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
         wb, SHEET_NAME, month_groups, S,
         value_fn=lambda line, wn: achieved.get((line, wn), 0),
         with_capacity=True, use_active=True)
+
+    main_week_col_n, main_month_span_n, _ = _block_columns(8, month_groups)
+    main_week_col = {wn: get_column_letter(c) for wn, c in main_week_col_n.items()}
+    main_month_span = {label: (get_column_letter(s), get_column_letter(e))
+                        for label, (s, e) in main_month_span_n.items()}
+    _write_efficiency_sheet(wb, "Efficiency", month_groups, S, SHEET_NAME, main_week_col, main_month_span)
 
     co_info, model = None, None
     if with_co:
@@ -685,7 +843,7 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
     # ── Source Calculations (hidden) ────────────────────────────────────────
     _write_source_calculations(wb, entries, target_weeks, S, register_date_label(pr_bytes))
     hidden_sheets = [SOURCE_SHEET]
-    order = [SHEET_NAME, "Blend Changeover", "Brand Changeover", SOURCE_SHEET]
+    order = [SHEET_NAME, "Efficiency", "Blend Changeover", "Brand Changeover", SOURCE_SHEET]
     if with_co:
         hidden_sheets += [changeover.SHEET_CALC, changeover.SHEET_DETAIL,
                           changeover.SHEET_ROUTING, changeover.SHEET_FG]

@@ -416,7 +416,7 @@ def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
                         use_active=False, footer_fn=None, grand_total=False, co_ratio_week=None):
     """One sheet: Zone/Region/Classification/Machine Line/Machines/Shifts, then
     (optionally) a live Capacity column, then value_fn(line, week) grouped by
-    month with a per-month SUM column. Returns {row: line name}.
+    month with a per-month SUM column. Returns ({row: line name}, next_free_row).
 
     grand_total     : add a trailing "Grand Total" row, summing only the
                        per-classification TOTAL rows (never the data rows
@@ -664,7 +664,7 @@ def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
     for c in range(1, LAST_COL + 1):                       # thin frame round the title / month headers
         ws.cell(1, c).border = BORDER
 
-    return line_rows
+    return line_rows, row
 
 
 def _write_efficiency_sheet(wb, title, month_groups, S, main_sheet, main_week_col, main_month_span):
@@ -860,7 +860,7 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
     S = _styles()
     wb = openpyxl.Workbook()
 
-    line_rows = _write_group_sheet(
+    line_rows, cap_end_row = _write_group_sheet(
         wb, SHEET_NAME, month_groups, S,
         value_fn=lambda line, wn: achieved.get((line, wn), 0),
         with_capacity=True, use_active=True, grand_total=True)
@@ -879,12 +879,12 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
 
         by_lw = model.by_line_week(weeknum)
         by_w = model.by_week(weeknum)
-        _write_group_sheet(
+        _, blend_end_row = _write_group_sheet(
             wb, "Blend Changeover", month_groups, S,
             value_fn=lambda line, wn: by_lw.get((line, wn), (0, 0))[0],
             with_capacity=False, footer_fn=lambda wn: by_w.get(wn, (0, 0))[0],
             co_ratio_week=target_weeks[-1])
-        _write_group_sheet(
+        _, brand_end_row = _write_group_sheet(
             wb, "Brand Changeover", month_groups, S,
             value_fn=lambda line, wn: by_lw.get((line, wn), (0, 0))[1],
             with_capacity=False, footer_fn=lambda wn: by_w.get(wn, (0, 0))[1],
@@ -899,12 +899,16 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
             "machine_shifts": len(model.calc),
         }
 
-    _write_observations_sheet(wb, S, achieved, target_weeks, by_lw)
+    last_week = target_weeks[-1]
+    _append_efficiency_observations(wb[SHEET_NAME], S, achieved, last_week, cap_end_row)
+    if with_co:
+        _append_changeover_observations(wb["Blend Changeover"], S, by_lw, 0, "Blend", last_week, blend_end_row)
+        _append_changeover_observations(wb["Brand Changeover"], S, by_lw, 1, "Brand", last_week, brand_end_row)
 
     # ── Source Calculations (hidden) ────────────────────────────────────────
     _write_source_calculations(wb, entries, target_weeks, S, register_date_label(pr_bytes))
     hidden_sheets = [SOURCE_SHEET]
-    order = [SHEET_NAME, "Efficiency", "Blend Changeover", "Brand Changeover", "Observations", SOURCE_SHEET]
+    order = [SHEET_NAME, "Efficiency", "Blend Changeover", "Brand Changeover", SOURCE_SHEET]
     if with_co:
         hidden_sheets += [changeover.SHEET_CALC, changeover.SHEET_DETAIL,
                           changeover.SHEET_ROUTING, changeover.SHEET_FG]
@@ -924,99 +928,76 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
 
 # ── Observations sheet ───────────────────────────────────────────────────────
 
-def _write_observations_sheet(wb, S, achieved, target_weeks, by_lw):
-    """5 points on the worst-performing machines (lowest capacity %), plus the
-    highest-changeover lines for Blend and Brand — all over the last 2 weeks
-    of the range. Only lines that actually ran (produced > 0) are considered
-    for the efficiency points."""
-    ws = wb.create_sheet("Observations")
-    last2 = target_weeks[-2:] if len(target_weeks) >= 2 else target_weeks[:]
-    wk_label = f"Week {last2[0]}" if len(last2) == 1 else f"Weeks {last2[0]}–{last2[-1]}"
+def _append_observation_block(ws, S, start_row, heading, points, empty_msg):
+    """Write one observation section (heading + numbered points) starting
+    one blank row below start_row (the sheet's own last used row)."""
+    row = start_row + 1
+    ws.merge_cells(f"A{row}:F{row}")
+    cell = ws.cell(row, 1, heading)
+    cell.font = Font(name=S["FN"], italic=True, size=10, color="FF444444")
+    cell.alignment = Alignment(horizontal="left", vertical="center")
+    ws.row_dimensions[row].height = 18
+    row += 1
+    if not points:
+        ws.merge_cells(f"A{row}:F{row}")
+        ws.cell(row, 1, empty_msg).font = Font(name=S["FN"], size=11)
+        ws.row_dimensions[row].height = 18
+        row += 1
+    else:
+        for i, text in enumerate(points, 1):
+            ws.merge_cells(f"A{row}:F{row}")
+            cell = ws.cell(row, 1, f"{i}. {text}")
+            cell.font = Font(name=S["FN"], size=11)
+            cell.alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
+            ws.row_dimensions[row].height = 18
+            row += 1
+    return row
 
+
+def _append_efficiency_observations(ws, S, achieved, last_week, end_row):
+    """5 points on the worst-performing ran machines (lowest % of capacity)
+    in last_week only, appended below the Capacity Vs Production table."""
     stats = []
     for zone, region, sub, line, nm, ns in LAYOUT:
         if zone == "__TOTAL__":
             continue
         cap_week = compute_capacity(line, nm, ns)
-        ach = sum(achieved.get((line, wn), 0) for wn in last2)
+        ach = achieved.get((line, last_week), 0)
         if not cap_week or ach <= 0:
             continue
-        cap_total = cap_week * len(last2)
-        pct = ach / cap_total * 100
-        stats.append((line, pct, ach, cap_total))
+        pct = ach / cap_week * 100
+        stats.append((line, pct, ach, cap_week))
     stats.sort(key=lambda t: t[1])
     worst = stats[:5]
 
-    def co_stats(idx):
-        """[(line, count)] over last2, highest first, for blend (idx=0) or brand (idx=1)."""
-        if by_lw is None:
-            return []
-        totals = defaultdict(int)
-        for zone, region, sub, line, nm, ns in LAYOUT:
-            if zone == "__TOTAL__":
-                continue
-            totals[line] += sum(by_lw.get((line, wn), (0, 0))[idx] for wn in last2)
-        out = [(line, c) for line, c in totals.items() if c > 0]
-        out.sort(key=lambda t: -t[1])
-        return out[:3]
+    _append_observation_block(
+        ws, S, end_row,
+        f"Poorest-performing machines, Week {last_week} (ran machines only, by % of capacity)",
+        [f"{line} ran at only {pct:.1f}% of capacity in Week {last_week} "
+         f"({ach:.1f} of {cap_week:.1f} containers achievable)."
+         for line, pct, ach, cap_week in worst],
+        "No machine ran below capacity in this week.")
 
-    ws.merge_cells("A1:F1")
-    ws["A1"] = "Observations"
-    ws["A1"].font, ws["A1"].fill = S["TITLE_L_FONT"], S["TITLE_L_FILL"]
-    ws["A1"].alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
-    ws.row_dimensions[1].height = 24
 
-    row = 3
+def _append_changeover_observations(ws, S, by_lw, idx, kind, last_week, end_row):
+    """Top 3 lines by Blend (idx=0) or Brand (idx=1) changeover count in
+    last_week only, appended below the changeover table."""
+    totals = defaultdict(int)
+    for zone, region, sub, line, nm, ns in LAYOUT:
+        if zone == "__TOTAL__":
+            continue
+        totals[line] += by_lw.get((line, last_week), (0, 0))[idx]
+    co_list = sorted(((line, c) for line, c in totals.items() if c > 0), key=lambda t: -t[1])[:3]
 
-    def section(heading, points, empty_msg):
-        nonlocal row
-        ws.merge_cells(f"A{row}:F{row}")
-        cell = ws.cell(row, 1, heading)
-        cell.font = Font(name=S["FN"], italic=True, size=10, color="FF444444")
-        cell.alignment = Alignment(horizontal="left", vertical="center")
-        ws.row_dimensions[row].height = 18
-        row += 1
-        if not points:
-            ws.merge_cells(f"A{row}:F{row}")
-            ws.cell(row, 1, empty_msg).font = Font(name=S["FN"], size=11)
-            ws.row_dimensions[row].height = 18
-            row += 1
-        else:
-            for i, text in enumerate(points, 1):
-                ws.merge_cells(f"A{row}:F{row}")
-                cell = ws.cell(row, 1, f"{i}. {text}")
-                cell.font = Font(name=S["FN"], size=11)
-                cell.alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
-                ws.row_dimensions[row].height = 18
-                row += 1
-        row += 1       # blank spacer row between sections
+    points = []
+    for i, (line, count) in enumerate(co_list):
+        tag = " — the most of any line" if i == 0 else ""
+        points.append(f"{line} had {count} {kind} changeovers in Week {last_week}{tag}.")
 
-    section(
-        f"Poorest-performing machines, {wk_label} (ran machines only, by % of capacity)",
-        [f"{line} ran at only {pct:.1f}% of capacity in {wk_label} "
-         f"({ach:.1f} of {cap_total:.1f} containers achievable)."
-         for line, pct, ach, cap_total in worst],
-        "No machine ran below capacity in this window.")
-
-    def co_text(co_list, kind):
-        out = []
-        for i, (line, count) in enumerate(co_list):
-            tag = " — the most of any line" if i == 0 else ""
-            out.append(f"{line} had {count} {kind} changeovers in {wk_label}{tag}.")
-        return out
-
-    section(
-        f"Highest Blend changeovers, {wk_label}",
-        co_text(co_stats(0), "Blend"),
-        "No Blend changeover data available." if by_lw is None else "No Blend changeovers in this window.")
-
-    section(
-        f"Highest Brand changeovers, {wk_label}",
-        co_text(co_stats(1), "Brand"),
-        "No Brand changeover data available." if by_lw is None else "No Brand changeovers in this window.")
-
-    ws.column_dimensions["A"].width = 110
-    ws.sheet_view.showGridLines = False
+    _append_observation_block(
+        ws, S, end_row,
+        f"Highest {kind} changeovers, Week {last_week}",
+        points, f"No {kind} changeovers in this week.")
 
 
 # ── Source Calculations sheet ────────────────────────────────────────────────

@@ -470,7 +470,7 @@ def _styles():
 def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
                         use_active=False, footer_fn=None, grand_total=False, co_ratio_week=None,
                         tbgs_capacity=False, decimals=3, scale=1, capacity_header=None,
-                        full_week_fn=None):
+                        full_week_fn=None, capacity_override=None, spacer_col=False):
     """One sheet: Zone/Region/Classification/Machine Line/Machines/Shifts, then
     (optionally) a live Capacity column, then value_fn(line, week, year, month)
     grouped by month with a per-month SUM column. A week split across two
@@ -503,9 +503,18 @@ def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
                        against the whole week's total, not just its own
                        partial share. Defaults to value_fn's own column
                        value when not given (fine for weeks that never
-                       split)."""
+                       split).
+    capacity_override : {line: value} — write this literal number into the
+                       Capacity cell instead of the usual Rate/ShiftMin
+                       formula (still "-" on a zero-shift line). For a
+                       one-off snapshot of capacity figures from elsewhere,
+                       not a permanent change to MC_FACTORS.
+    spacer_col      : insert one blank, narrow column between Month Capacity
+                       and the first week column (cosmetic divider only)."""
     BORDER = S["BORDER"]
-    VALUE_START = 9 if with_capacity else 7
+    use_spacer = bool(spacer_col and with_capacity)
+    VALUE_START = (10 if use_spacer else 9) if with_capacity else 7
+    SPACER_COL = 9 if use_spacer else None
 
     ws = wb.active if use_active else wb.create_sheet(title)
     ws.title = title
@@ -550,6 +559,8 @@ def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
         ws.column_dimensions[col].width = w
     for c in range(5, LAST_COL + 1):
         ws.column_dimensions[get_column_letter(c)].width = WEEK_COL_WIDTH
+    if SPACER_COL is not None:
+        ws.column_dimensions[get_column_letter(SPACER_COL)].width = 1.1
 
     if with_capacity:
         LKP_COL = LAST_COL + 3
@@ -630,8 +641,13 @@ def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
             cell.font, cell.border = S["NORM"], BORDER
             cell.alignment = Alignment(horizontal="right", vertical="center")
 
-        cap_val = round((compute_capacity_tbgs if tbgs_capacity else compute_capacity)(line, nm, ns) / scale, decimals)
         zero_cap = (ns == 0)
+        override_val = capacity_override.get(line) if capacity_override else None
+
+        if override_val is not None and not zero_cap:
+            cap_val = round(override_val / scale, decimals)
+        else:
+            cap_val = round((compute_capacity_tbgs if tbgs_capacity else compute_capacity)(line, nm, ns) / scale, decimals)
 
         if with_capacity:
             f = MC_FACTORS.get(line, {})
@@ -639,11 +655,14 @@ def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
                 ws.cell(row, LKP_COL + i, f.get(key, 0)).font = S["HELPER_FONT"]
             # Capacity is always a live formula (never a static "-"), so changing
             # Machines/Shifts for a line that started at 0 shifts still recalculates.
+            # (Unless capacity_override pins this line to a literal snapshot value.)
             f_cell = ws.cell(row, 7)
             f_cell.border, f_cell.font = BORDER, S["NORM"]
             f_cell.alignment = Alignment(horizontal="right", vertical="center")
             f_cell.number_format = S["NUMFMT_CNTR"]
-            if tbgs_capacity:
+            if override_val is not None:
+                f_cell.value = "-" if zero_cap else round(override_val / scale, decimals)
+            elif tbgs_capacity:
                 f_cell.value = (
                     f'=IF($F{row}=0,"-",ROUND({Qc}{row}*{Rc}{row}*$E{row}*$F{row}*6*0.9/{scale},{decimals}))')
             else:
@@ -754,6 +773,10 @@ def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
             cell.number_format = S["NUMFMT_CNTR"]
             cell.alignment = Alignment(horizontal="right", vertical="center")
         row += 1
+
+    if SPACER_COL is not None and row > 3:
+        sl = get_column_letter(SPACER_COL)
+        ws.merge_cells(f"{sl}2:{sl}{row - 1}")
 
     ws.freeze_panes = f"{get_column_letter(VALUE_START)}3"
     ws.sheet_view.showGridLines = False
@@ -924,7 +947,8 @@ def _write_efficiency_sheet(wb, title, month_groups, S, main_sheet, main_week_co
 # ── Main report builder ──────────────────────────────────────────────────────
 
 def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None,
-                         prod_rows_override=None, changeover_rows_override=None):
+                         prod_rows_override=None, changeover_rows_override=None,
+                         capacity_override=None, spacer_col=False):
     """
     Parameters
     ----------
@@ -938,6 +962,15 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None,
                                 needed for register_date_label().
     changeover_rows_override : pre-extracted changeover.read_production_rows() rows
                                 to use instead of reading pr_bytes, for the same reason.
+    capacity_override : {line: week capacity value} — pin the Capacity Vs
+                                Production sheet's Capacity column to these
+                                literal numbers for the given lines (e.g. a
+                                snapshot from another capacity master),
+                                instead of the usual Rate/ShiftMin formula.
+                                Not applied to the TBGS sheet.
+    spacer_col                : add a blank narrow column between Month
+                                Capacity and the first week column on the
+                                Capacity Vs Production sheet.
 
     Returns
     -------
@@ -988,7 +1021,8 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None,
         wb, SHEET_NAME, month_groups, S,
         value_fn=lambda line, wn, y, m: achieved_split.get((line, wn, y, m), 0),
         full_week_fn=lambda line, wn: achieved.get((line, wn), 0),
-        with_capacity=True, use_active=True, grand_total=True)
+        with_capacity=True, use_active=True, grand_total=True,
+        capacity_override=capacity_override, spacer_col=spacer_col)
 
     _write_group_sheet(
         wb, "Capacity Vs Production (TBGS)", month_groups, S,

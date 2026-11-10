@@ -228,18 +228,38 @@ def extract_prod_register(pr_bytes, item_routing=None):
     item_routing : {item name: report line or None} from the MC Routing Master
     (load_item_routing). An exact item-name match there wins over the
     work-center ROUTING_MAP; a value of None explicitly drops that item.
+
+    Columns are located by header name (not fixed position) — the export's
+    column layout has changed between registers (e.g. extra "BOM Ver Id" /
+    "Version_No" columns inserted), so a fixed-offset read would silently
+    pull from the wrong columns and extract nothing.
     """
     wb = openpyxl.load_workbook(io.BytesIO(pr_bytes), data_only=True)
     ws = wb["Default"] if "Default" in wb.sheetnames else wb[wb.sheetnames[0]]
     item_routing = item_routing or {}
+
+    hdr_row = next((r for r in range(1, 15) if str(ws.cell(r, 1).value).strip() == "Process_Date"), None)
+    if hdr_row is None:
+        raise ValueError("Production Register: could not find the header row (Process_Date).")
+    cols = {str(ws.cell(hdr_row, c).value).strip(): c
+            for c in range(1, ws.max_column + 1) if ws.cell(hdr_row, c).value is not None}
+    need = ["Process_Date", "Work Center", "Item Name", "Production Qty", "UOM"]
+    missing = [n for n in need if n not in cols]
+    if missing:
+        raise ValueError(f"Production Register is missing column(s): {', '.join(missing)}")
+    c_date, c_wc, c_item, c_qty, c_uom = (cols[n] for n in need)
+    c_txn = cols.get("Transaction Type")        # not present in every export vintage
+
     rows = []
-    for r in range(8, ws.max_row + 1):
-        pdate = ws.cell(r, 1).value
-        wc = ws.cell(r, 3).value
-        item_name = ws.cell(r, 6).value or ""
-        qty = ws.cell(r, 8).value
-        uom = ws.cell(r, 10).value
+    for r in range(hdr_row + 1, ws.max_row + 1):
+        pdate = ws.cell(r, c_date).value
+        wc = ws.cell(r, c_wc).value
+        item_name = ws.cell(r, c_item).value or ""
+        qty = ws.cell(r, c_qty).value
+        uom = ws.cell(r, c_uom).value
         if not pdate or not wc:
+            continue
+        if c_txn and str(ws.cell(r, c_txn).value).strip() != "Production":
             continue
         if wc in SKIP_WORK_CENTERS or uom in SKIP_UOMS:
             continue

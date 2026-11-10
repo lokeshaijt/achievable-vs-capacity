@@ -40,7 +40,7 @@ HELPER_WIDTH = 9.0
 LAYOUT = [
     ("Zone 1", "AFRICA",    "DC",          "PERFECTA ENV(Black Tea)",   3,  2),
     (None,     None,        None,          "C250 AF(Black Tea)",        2,  2),
-    (None,     None,        None,          "MD20 ENV(Black Tea)",       4,  2),
+    (None,     None,        None,          "MD20 ENV(Black Tea)",       2,  2),
     (None,     None,        None,          "CONSTANTA ENV(Flavour Tea)",23, 2),
     (None,     None,        None,          "CONSTANTA ENV (HERBAL)",    9,  2),
     ("__TOTAL__", None, None, None, None, None),
@@ -48,6 +48,7 @@ LAYOUT = [
     ("__TOTAL__", None, None, None, None, None),
     (None,     "EUROPE",    "DC SF",       "C250",                      3,  2),
     (None,     None,        None,          "VARIETIES PACK",            1,  2),
+    (None,     None,        None,          "MD20 ENV GARANT",           2,  2),
     ("__TOTAL__", None, None, None, None, None),
     (None,     None,        "DC TAG",      "MD20 4GM TAG",              1,  1),
     (None,     None,        None,          "PERFECTA  K 45 TAG",        1,  1),
@@ -82,22 +83,23 @@ LAYOUT = [
 # ── Capacity factors per machine line (New capacity — Arul Sir) ──────────────
 MC_FACTORS = {
     "BREW MAGIC":                     {"rate": 8,   "shiftmin": 540, "tbgs_cfc": 32,   "cfc_cntr": 3600},
-    "C250":                           {"rate": 250, "shiftmin": 524, "tbgs_cfc": 480,  "cfc_cntr": 7200},
+    "C250":                           {"rate": 250, "shiftmin": 494, "tbgs_cfc": 480,  "cfc_cntr": 7200},
     "C250 AF(Black Tea)":             {"rate": 250, "shiftmin": 524, "tbgs_cfc": 1200, "cfc_cntr": 3340},
-    "C250-A":                         {"rate": 250, "shiftmin": 524, "tbgs_cfc": 480,  "cfc_cntr": 3600},
-    "VARIETIES PACK":                 {"rate": 250, "shiftmin": 524, "tbgs_cfc": 480,  "cfc_cntr": 7200},
+    "C250-A":                         {"rate": 250, "shiftmin": 502, "tbgs_cfc": 480,  "cfc_cntr": 3600},
+    "VARIETIES PACK":                 {"rate": 250, "shiftmin": 503, "tbgs_cfc": 480,  "cfc_cntr": 7200},
     "INSTANT COFFEE STICK PACK":      {"rate": 40,  "shiftmin": 540, "tbgs_cfc": 1350, "cfc_cntr": 3000},
-    "CONSTANTA ENV(Flavour Tea)":     {"rate": 125, "shiftmin": 553, "tbgs_cfc": 600,  "cfc_cntr": 6375},
+    "CONSTANTA ENV(Flavour Tea)":     {"rate": 125, "shiftmin": 542, "tbgs_cfc": 600,  "cfc_cntr": 6375},
     "CONSTANTA ENV (HERBAL)":         {"rate": 125, "shiftmin": 553, "tbgs_cfc": 1125, "cfc_cntr": 3340},
     "CONSTANTA FAMILY SIZE":          {"rate": 95,  "shiftmin": 540, "tbgs_cfc": 144,  "cfc_cntr": 5720},
-    "CONSTANTA TAG":                  {"rate": 120, "shiftmin": 543, "tbgs_cfc": 1200, "cfc_cntr": 2688},
+    "CONSTANTA TAG":                  {"rate": 120, "shiftmin": 541, "tbgs_cfc": 1200, "cfc_cntr": 2688},
     "Instant Tea":                    {"rate": 14,  "shiftmin": 550, "tbgs_cfc": 60,   "cfc_cntr": 15120},
-    "MAISA ENV":                      {"rate": 100, "shiftmin": 544, "tbgs_cfc": 1200, "cfc_cntr": 1656},
+    "MAISA ENV":                      {"rate": 100, "shiftmin": 539, "tbgs_cfc": 1200, "cfc_cntr": 1656},
     "MAISA TAGLESS":                  {"rate": 120, "shiftmin": 555, "tbgs_cfc": 2400, "cfc_cntr": 2800},
     "MD20 4GM TAG":                   {"rate": 125, "shiftmin": 548, "tbgs_cfc": 480,  "cfc_cntr": 4032},
     "MD20 ENV(Black Tea)":            {"rate": 185, "shiftmin": 528, "tbgs_cfc": 1200, "cfc_cntr": 3340},
-    "MD20 HS":                        {"rate": 170, "shiftmin": 526, "tbgs_cfc": 300,  "cfc_cntr": 6500},
-    "Pearl Pack-FFS POUCH":           {"rate": 10,  "shiftmin": 550, "tbgs_cfc": 24,   "cfc_cntr": 1200},
+    "MD20 ENV GARANT":                {"rate": 185, "shiftmin": 514, "tbgs_cfc": 1200, "cfc_cntr": 3340},
+    "MD20 HS":                        {"rate": 170, "shiftmin": 516, "tbgs_cfc": 300,  "cfc_cntr": 6500},
+    "Pearl Pack-FFS POUCH":           {"rate": 10,  "shiftmin": 521, "tbgs_cfc": 24,   "cfc_cntr": 1200},
     "PEARL PACK-PREMIX":              {"rate": 30,  "shiftmin": 550, "tbgs_cfc": 120,  "cfc_cntr": 6000},
     "PEARL PACK-PREMIX - cappuccino": {"rate": 30,  "shiftmin": 550, "tbgs_cfc": 120,  "cfc_cntr": 4800},
     "PERFACTA TAG":                   {"rate": 300, "shiftmin": 525, "tbgs_cfc": 600,  "cfc_cntr": 4620},
@@ -105,7 +107,7 @@ MC_FACTORS = {
     "PERFECTA ENV(Black Tea)":        {"rate": 280, "shiftmin": 523, "tbgs_cfc": 1200, "cfc_cntr": 3340},
     "Shubam-FFS POUCH":               {"rate": 190, "shiftmin": 530, "tbgs_cfc": 0,    "cfc_cntr": 0},
     "UNIVERSAL POT BAG":              {"rate": 272, "shiftmin": 540, "tbgs_cfc": 960,  "cfc_cntr": 0},
-    "UNIVERSAL TWIN BAG":             {"rate": 420, "shiftmin": 541, "tbgs_cfc": 960,  "cfc_cntr": 3320},
+    "UNIVERSAL TWIN BAG":             {"rate": 420, "shiftmin": 537, "tbgs_cfc": 960,  "cfc_cntr": 3320},
     "VIKING-MULTITRACK":              {"rate": 56,  "shiftmin": 550, "tbgs_cfc": 60,   "cfc_cntr": 15120},
 }
 
@@ -123,12 +125,14 @@ ROUTING_MAP = {
     "MAISA TAGLESS":             "MAISA TAGLESS",
     "MD20 4GM TAG":              "MD20 4GM TAG",
     "MD20 ENV":                  "MD20 ENV(Black Tea)",
+    "MD20 ENV GARANT":           "MD20 ENV GARANT",
     "MD20 HS":                   "MD20 HS",
     "PERFACTA TAG":              "PERFACTA TAG",
     "PERFECTA  K 45 TAG":        "PERFECTA  K 45 TAG",
     "PERFECTA ENV":              "PERFECTA ENV(Black Tea)",
     "FFS POUCH":                 "Pearl Pack-FFS POUCH",
-    "FFS POUCH - 13G- 40G":      "Pearl Pack-FFS POUCH",
+    # "FFS POUCH - 13G- 40G" intentionally not routed here — excluded from
+    # the Pearl Pack-FFS POUCH line, falls through SKIP_WORK_CENTERS-style drop.
     "UNIVERSAL POT BAG":         "UNIVERSAL POT BAG",
     "UNIVERSAL TWIN BAG":        "UNIVERSAL TWIN BAG",
     "VARIETIES PACK":            "VARIETIES PACK",
@@ -142,6 +146,7 @@ ROUTING_MAP = {
     "CONSTANTA ENV HF":          "CONSTANTA ENV(Flavour Tea)",
     "CONSTANTA ENV M":           "CONSTANTA ENV(Flavour Tea)",
     "PEARL PACK-PREMIX":         "PEARL PACK-PREMIX",
+    "PEARL PACK-PREMIX 2":       "PEARL PACK-PREMIX",
 }
 
 # Items with no herbal/cappuccino signal in the MC Routing Master are split by
@@ -177,7 +182,7 @@ ITEM_MASTER_LINE_MAP = {
     "UNIVERSAL TWIN BAG":           "UNIVERSAL TWIN BAG",
     "MAISA TAGLESS":                "MAISA TAGLESS",
     "PAKONA 250GMS/500GMS/1000GMS": None,
-    "MD20 ENV GARANT":              None,
+    "MD20 ENV GARANT":              "MD20 ENV GARANT",
     "C250F3 HS":                    None,
 }
 
@@ -186,7 +191,10 @@ SKIP_WORK_CENTERS = {
     "CFC FORMING", "RECLAIM", "MANUAL", "UNFOLD", "BAG FORMING",
     "MISC", "PAKONA 250GMS/500GMS/1000GMS",
 }
-SKIP_UOMS = {"KGS", "BAG", "POUCH", "ENV", "PKT", "BOX", "CASE", "PCS"}
+# KGS is a weight, not a piece/tea-bag count, so it can't be converted the
+# same way as the others — everything else (CTN, CFC, ENV, POUCH, PKT, BOX,
+# CASE, PCS) is allowed through.
+SKIP_UOMS = {"KGS"}
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_FG_BLEND_FILE = os.path.join(_HERE, "FG_Blend_Names.xlsx")
@@ -235,12 +243,10 @@ def extract_prod_register(pr_bytes, item_routing=None):
             continue
         if wc in SKIP_WORK_CENTERS or uom in SKIP_UOMS:
             continue
-        if uom not in ("CTN", "CFC"):
-            continue
 
         if item_name in item_routing:
             group = item_routing[item_name]                        # may be None -> explicit drop
-        elif wc == "PEARL PACK-PREMIX" and "CAPPUCCINO" in item_name.upper():
+        elif wc in ("PEARL PACK-PREMIX", "PEARL PACK-PREMIX 2") and "CAPPUCCINO" in item_name.upper():
             group = "PEARL PACK-PREMIX - cappuccino"
         elif wc and wc.startswith("CONSTANTA ENV") and item_name in HERBAL_ITEMS:
             group = "CONSTANTA ENV (HERBAL)"
@@ -301,27 +307,38 @@ def week_label(wn):
 
 
 def _month_groups(weeks, week1_monday):
-    """[[month_label, [week numbers in that month, in order]], ...] for the given weeks."""
+    """[[month_label, [(week_number, year, month, days_in_this_month), ...]], ...]
+    for the given weeks. A week whose 7 days (Mon-Sun) fall across a calendar
+    month boundary appears in BOTH months' groups — once per month it
+    touches — each carrying only the day-count actually in that month, so
+    callers can split that week's column (and its production) accordingly."""
     groups, index = [], {}
     for wn in weeks:
         monday = week1_monday + datetime.timedelta(days=(wn - 1) * 7)
-        key = (monday.year, monday.month)
-        if key not in index:
-            index[key] = len(groups)
-            groups.append([monday.strftime("%b").upper(), []])
-        groups[index[key]][1].append(wn)
+        days_in_month = defaultdict(int)
+        for i in range(7):
+            d = monday + datetime.timedelta(days=i)
+            days_in_month[(d.year, d.month)] += 1
+        for (y, m) in sorted(days_in_month):
+            key = (y, m)
+            if key not in index:
+                index[key] = len(groups)
+                groups.append([datetime.date(y, m, 1).strftime("%b").upper(), []])
+            groups[index[key]][1].append((wn, y, m, days_in_month[key]))
     return groups
 
 
 def _block_columns(start_col, month_groups):
     """Lay out week + month-total columns for one data block, left to right.
-    Returns (week_col: {wn: col}, month_span: {label: (first_week_col, total_col)}, next_free_col)."""
+    A week split across two months gets one column per month (same week
+    number, different (year, month) key).
+    Returns (week_col: {(wn, y, m): col}, month_span: {label: (first_week_col, total_col)}, next_free_col)."""
     week_col, month_span = {}, {}
     c = start_col
     for label, weeks in month_groups:
         span_start = c
-        for wn in weeks:
-            week_col[wn] = c
+        for (wn, y, m, _daycount) in weeks:
+            week_col[(wn, y, m)] = c
             c += 1
         month_span[label] = (span_start, c)      # c = this month's total column
         c += 1
@@ -352,8 +369,12 @@ def prod_entries(prod_rows, tbgs_per_ctn, target_weeks):
                 skipped.add(item_name)
                 continue
             cfc = qty * tbgs_ctn / tpc
+        elif uom == "CFC":
+            tbgs_ctn, source, cfc = None, "CFC", qty            # already a CFC count
         else:
-            tbgs_ctn, source, cfc = None, "CFC", qty
+            # ENV/POUCH/PKT/BOX/CASE/PCS: qty is a TBGS (tea-bag-equivalent)
+            # count directly, same as CTN's qty x TBGS/CTN, minus that step.
+            tbgs_ctn, source, cfc = None, uom, qty / tpc
         entries.append(dict(date=d, wn=wn, group=group, wc=wc, uom=uom, qty=qty, tbgs_ctn=tbgs_ctn,
                             source=source, tpc=tpc, cfc=cfc, cpc=cpc, containers=cfc / cpc))
     return entries, skipped
@@ -376,6 +397,16 @@ def compute_capacity(line, machines, shifts):
     if not (rate and shiftmin and tbgs_cfc and cfc_cntr and machines and shifts):
         return 0.0
     return rate * shiftmin * machines * shifts * 6 * EFFICIENCY / tbgs_cfc / cfc_cntr
+
+
+def compute_capacity_tbgs(line, machines, shifts):
+    """Weekly capacity in TBGS (tea-bag-equivalent) — same as compute_capacity
+    but without the ÷TBGS/CFC÷CFC/Cntr step."""
+    f = MC_FACTORS.get(line, {})
+    rate, shiftmin = f.get("rate", 0), f.get("shiftmin", 0)
+    if not (rate and shiftmin and machines and shifts):
+        return 0.0
+    return rate * shiftmin * machines * shifts * 6 * EFFICIENCY
 
 
 # ── Styles ───────────────────────────────────────────────────────────────────
@@ -406,6 +437,10 @@ def _styles():
         "OVER_FONT":    Font(name=FN, size=10, color="FFCC3300"),
         "HELPER_FONT":  Font(name=FN, size=9, color="FFAAAAAA"),
         "NUMFMT_CNTR":  "_ * #,##0.0_ ;_ * \\-#,##0.0_ ;_ * \\-??_ ;_ @_ ",
+        # More decimal places, for a zero-shift line that still shows a real
+        # (usually tiny) achieved value — 0.0 at one decimal would round it
+        # away to looking like nothing ran.
+        "NUMFMT_CNTR_PRECISE": "_ * #,##0.000_ ;_ * \\-#,##0.000_ ;_ * \\-??_ ;_ @_ ",
         "NUMFMT_PCT":   "0.0\\%",
     }
 
@@ -413,10 +448,15 @@ def _styles():
 # ── Generic month+week grouped sheet writer ──────────────────────────────────
 
 def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
-                        use_active=False, footer_fn=None, grand_total=False, co_ratio_week=None):
+                        use_active=False, footer_fn=None, grand_total=False, co_ratio_week=None,
+                        tbgs_capacity=False, decimals=3, scale=1, capacity_header=None,
+                        full_week_fn=None):
     """One sheet: Zone/Region/Classification/Machine Line/Machines/Shifts, then
-    (optionally) a live Capacity column, then value_fn(line, week) grouped by
-    month with a per-month SUM column. Returns ({row: line name}, next_free_row).
+    (optionally) a live Capacity column, then value_fn(line, week, year, month)
+    grouped by month with a per-month SUM column. A week split across two
+    calendar months gets one column per month, both calling value_fn with the
+    same week number but a different (year, month) — value_fn must itself
+    return only that month's share. Returns ({row: line name}, next_free_row).
 
     grand_total     : add a trailing "Grand Total" row, summing only the
                        per-classification TOTAL rows (never the data rows
@@ -424,7 +464,26 @@ def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
     co_ratio_week   : if given, add a trailing "Changeover/MC/Shift
                        (Week N)" column = that week's value ÷ Machines ÷ 12
                        (blank "-" wherever Machines is blank, i.e. on TOTAL
-                       rows)."""
+                       rows).
+    tbgs_capacity   : capacity formula stops at Rate×ShiftMin×Machines×
+                       Shifts×6×90% — no ÷TBGS/CFC÷CFC/Cntr — so the
+                       Capacity/Month Capacity columns come out in TBGS
+                       instead of containers (value_fn must then also
+                       return TBGS amounts).
+    decimals        : rounding applied to the achieved-value cells and to
+                       the capacity formula.
+    scale           : divide the Capacity formula and value_fn's results by
+                       this before rounding (e.g. 100000 to show TBGS in
+                       lakhs instead of raw tea-bag counts).
+    capacity_header : text for the Capacity column header; defaults to
+                       CAPACITY_HEADER.
+    full_week_fn    : full_week_fn(line, week) returning that week's FULL
+                       (unsplit) value — used only for the over-capacity red
+                       highlight, so a month-fragment cell is compared
+                       against the whole week's total, not just its own
+                       partial share. Defaults to value_fn's own column
+                       value when not given (fine for weeks that never
+                       split)."""
     BORDER = S["BORDER"]
     VALUE_START = 9 if with_capacity else 7
 
@@ -451,13 +510,13 @@ def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
     headers = {1: "Zone", 2: "Region", 3: None, 4: "Machine Line",
                5: "No. of\nMachines", 6: "No. of\nShifts"}
     if with_capacity:
-        headers[7] = CAPACITY_HEADER
+        headers[7] = capacity_header or CAPACITY_HEADER
         headers[8] = "Month\nCapacity"
     for c, h in headers.items():
         cell = ws.cell(2, c, h)
         cell.font, cell.fill, cell.border = S["HDR_FONT"], S["HDR_FILL"], BORDER
         cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-    for wn, col in week_col.items():
+    for (wn, y, m), col in week_col.items():
         cell = ws.cell(2, col, week_label(wn))
         cell.font, cell.fill, cell.border = S["WEEK_HDR_FONT"], S["CNTR_HDR_FILL"], BORDER
         cell.alignment = Alignment(horizontal="center", vertical="center")
@@ -506,7 +565,7 @@ def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
             if with_capacity:
                 f_cell = ws.cell(row, 7, f"=SUM(G{grp_start}:G{row - 1})")
                 f_cell.number_format = S["NUMFMT_CNTR"]
-                mc_cell = ws.cell(row, 8, f"=G{row}*4")
+                mc_cell = ws.cell(row, 8, f"=G{row}/6*26")
                 mc_cell.number_format = S["NUMFMT_CNTR"]
             for col in list(week_col.values()) + [tc for _, tc in month_span.values()]:
                 cl = get_column_letter(col)
@@ -551,7 +610,7 @@ def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
             cell.font, cell.border = S["NORM"], BORDER
             cell.alignment = Alignment(horizontal="right", vertical="center")
 
-        cap_val = round(compute_capacity(line, nm, ns), 3)
+        cap_val = round((compute_capacity_tbgs if tbgs_capacity else compute_capacity)(line, nm, ns) / scale, decimals)
         zero_cap = (ns == 0)
 
         if with_capacity:
@@ -564,31 +623,44 @@ def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
             f_cell.border, f_cell.font = BORDER, S["NORM"]
             f_cell.alignment = Alignment(horizontal="right", vertical="center")
             f_cell.number_format = S["NUMFMT_CNTR"]
-            f_cell.value = (
-                f'=IFERROR(IF({Tc}{row}=0,"-",'
-                f'ROUND({Qc}{row}*{Rc}{row}*$E{row}*$F{row}*6*0.9/{Sc}{row}/{Tc}{row},3)),"-")')
+            if tbgs_capacity:
+                f_cell.value = (
+                    f'=IF($F{row}=0,"-",ROUND({Qc}{row}*{Rc}{row}*$E{row}*$F{row}*6*0.9/{scale},{decimals}))')
+            else:
+                f_cell.value = (
+                    f'=IFERROR(IF({Tc}{row}=0,"-",'
+                    f'ROUND({Qc}{row}*{Rc}{row}*$E{row}*$F{row}*6*0.9/{Sc}{row}/{Tc}{row},{decimals})),"-")')
 
-            mc_cell = ws.cell(row, 8, f'=IF(G{row}="-","-",G{row}*4)')
+            mc_cell = ws.cell(row, 8, f'=IF(G{row}="-","-",G{row}/6*26)')
             mc_cell.border, mc_cell.font, mc_cell.fill = BORDER, S["NORM"], S["REGION_FILL"]
             mc_cell.alignment = Alignment(horizontal="right", vertical="center")
             mc_cell.number_format = S["NUMFMT_CNTR"]
 
-        for wn, col in week_col.items():
-            val = value_fn(line, wn)
-            over = bool(with_capacity and cap_val and val and val > cap_val)
+        # A zero-shift line is nominally not running, but production can still
+        # show up against it (e.g. a small carry-over run) — that must still
+        # display, at higher precision so a tiny amount doesn't round to 0.0.
+        row_numfmt = S["NUMFMT_CNTR_PRECISE"] if (with_capacity and zero_cap) else S["NUMFMT_CNTR"]
+
+        for (wn, y, m), col in week_col.items():
+            val = value_fn(line, wn, y, m)
+            full_val = full_week_fn(line, wn) if full_week_fn else val
+            scaled_full = full_val / scale if full_val else full_val
+            over = bool(with_capacity and cap_val and scaled_full and scaled_full > cap_val)
             cell = ws.cell(row, col)
             cell.border = BORDER
             cell.alignment = Alignment(horizontal="right", vertical="center")
-            if not (with_capacity and zero_cap):
-                cell.number_format = S["NUMFMT_CNTR"]
             cell.font = S["OVER_FONT"] if over else S["NORM"]
-            cell.value = "-" if (with_capacity and zero_cap) or not val else round(val, 3)
+            if not val:
+                cell.value = "-"
+            else:
+                cell.value = round(val / scale, decimals)
+                cell.number_format = row_numfmt
 
         for total_col, formula in month_total_formula(row).items():
             cell = ws.cell(row, total_col, formula)
             cell.border = BORDER
             cell.font = S["NORM"]
-            cell.number_format = S["NUMFMT_CNTR"]
+            cell.number_format = row_numfmt
             cell.alignment = Alignment(horizontal="right", vertical="center")
         row += 1
 
@@ -607,9 +679,12 @@ def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
     data_end_row = row          # one past the last data/TOTAL row (before any footer/grand-total)
 
     # ── Trailing "Changeover/MC/Shift (Week N)" column ────────────────────
-    if co_ratio_week is not None and co_ratio_week in week_col:
+    co_cols = sorted(col for (wn, y, m), col in week_col.items() if wn == co_ratio_week)
+    if co_ratio_week is not None and co_cols:
         extra_col = LAST_COL + 1
-        wk_letter = get_column_letter(week_col[co_ratio_week])
+        # A split week has two columns (one per month) — sum them to get the
+        # week's full changeover count before dividing.
+        numerator = "+".join(get_column_letter(c) + "{row}" for c in co_cols)
         header_cell = ws.cell(1, extra_col, f"Changeover/MC/Shift\n(Week {co_ratio_week})")
         ws.merge_cells(start_row=1, start_column=extra_col, end_row=2, end_column=extra_col)
         header_cell.font, header_cell.fill, header_cell.border = S["HDR_FONT"], S["HDR_FILL"], BORDER
@@ -617,7 +692,8 @@ def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
         ws.cell(2, extra_col).border = BORDER
         ws.column_dimensions[get_column_letter(extra_col)].width = 14
         for r in range(3, data_end_row):
-            cell = ws.cell(r, extra_col, f'=IFERROR(ROUND({wk_letter}{r}/$E{r}/12,2),"-")')
+            num = numerator.format(row=r)
+            cell = ws.cell(r, extra_col, f'=IFERROR(ROUND(({num})/$E{r}/12,2),"-")')
             cell.border = BORDER
             cell.font = S["NORM"]
             cell.alignment = Alignment(horizontal="right", vertical="center")
@@ -626,8 +702,8 @@ def _write_group_sheet(wb, title, month_groups, S, value_fn, *, with_capacity,
     # ── Footer row: all-machines total, including work centers with no line ──
     if footer_fn is not None:
         ws.row_dimensions[row].height = 18
-        for wn, col in week_col.items():
-            val = footer_fn(wn)
+        for (wn, y, m), col in week_col.items():
+            val = footer_fn(wn, y, m)
             cell = ws.cell(row, col, "-" if not val else round(val, 3))
             cell.font, cell.border, cell.number_format = S["NORM"], BORDER, S["NUMFMT_CNTR"]
             cell.alignment = Alignment(horizontal="right", vertical="center")
@@ -695,7 +771,7 @@ def _write_efficiency_sheet(wb, title, month_groups, S, main_sheet, main_week_co
         cell = ws.cell(2, c, h)
         cell.font, cell.fill, cell.border = S["HDR_FONT"], S["HDR_FILL"], BORDER
         cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-    for wn, col in week_col.items():
+    for (wn, y, m), col in week_col.items():
         cell = ws.cell(2, col, week_label(wn))
         cell.font, cell.fill, cell.border = S["WEEK_HDR_FONT"], S["CNTR_HDR_FILL"], BORDER
         cell.alignment = Alignment(horizontal="center", vertical="center")
@@ -715,7 +791,13 @@ def _write_efficiency_sheet(wb, title, month_groups, S, main_sheet, main_week_co
     cur_zone = cur_region = cur_sub = None
     grp_start = row
 
-    month_weeks = {label: weeks for label, weeks in month_groups}
+    # weeks as (wn, y, m) keys (dropping the day-count), plus the equivalent
+    # whole-week weight for that month (1.0 for a week entirely in it, a
+    # fraction like 2/7 or 5/7 for a week split across the month boundary —
+    # used so a split week doesn't get double-weighted as a full week in
+    # both months' averages).
+    month_weeks = {label: [(wn, y, m) for (wn, y, m, _dc) in weeks] for label, weeks in month_groups}
+    month_week_weight = {label: sum(dc / 7 for (_wn, _y, _m, dc) in weeks) for label, weeks in month_groups}
 
     for zone, region, sub, line, nm, ns in LAYOUT:
         ws.row_dimensions[row].height = 18
@@ -727,18 +809,19 @@ def _write_efficiency_sheet(wb, title, month_groups, S, main_sheet, main_week_co
                 if c >= 4:
                     cell.fill, cell.font = S["TOTAL_FILL"], S["BOLD"]
             ws.cell(row, 4, "TOTAL")
-            for wn, col in week_col.items():
-                mcol = main_week_col[wn]
+            for (wn, y, m), col in week_col.items():
+                mcol = main_week_col[(wn, y, m)]
                 cell = ws.cell(row, col,
                     f'=IFERROR(ROUND(SUM(\'{main_sheet}\'!{mcol}{grp_start}:{mcol}{row - 1})/'
                     f'SUMIF(\'{main_sheet}\'!G{grp_start}:G{row - 1},">0")*100,1),0)')
                 cell.number_format = S["NUMFMT_PCT"]
             for label, (span_start, total_col) in month_span.items():
                 weeks = month_weeks[label]
+                weight = month_week_weight[label]
                 c1, c2 = main_week_col[weeks[0]], main_week_col[weeks[-1]]
                 cell = ws.cell(row, total_col,
                     f'=IFERROR(ROUND(SUM(\'{main_sheet}\'!{c1}{grp_start}:{c2}{row - 1})/'
-                    f'(SUMIF(\'{main_sheet}\'!G{grp_start}:G{row - 1},">0")*{len(weeks)})*100,1),0)')
+                    f'(SUMIF(\'{main_sheet}\'!G{grp_start}:G{row - 1},">0")*{weight})*100,1),0)')
                 cell.number_format = S["NUMFMT_PCT"]
             grp_start = row + 1
             row += 1
@@ -778,8 +861,8 @@ def _write_efficiency_sheet(wb, title, month_groups, S, main_sheet, main_week_co
             cell.alignment = Alignment(horizontal="right", vertical="center")
 
         mcap = f"'{main_sheet}'!G{row}"
-        for wn, col in week_col.items():
-            mcol = main_week_col[wn]
+        for (wn, y, m), col in week_col.items():
+            mcol = main_week_col[(wn, y, m)]
             cell = ws.cell(row, col,
                 f'=IFERROR(IF({mcap}="-","-",IF({mcap}=0,0,'
                 f'ROUND(\'{main_sheet}\'!{mcol}{row}/{mcap}*100,1))),"-")')
@@ -789,10 +872,11 @@ def _write_efficiency_sheet(wb, title, month_groups, S, main_sheet, main_week_co
             cell.alignment = Alignment(horizontal="right", vertical="center")
         for label, (span_start, total_col) in month_span.items():
             weeks = month_weeks[label]
+            weight = month_week_weight[label]
             c1, c2 = main_week_col[weeks[0]], main_week_col[weeks[-1]]
             cell = ws.cell(row, total_col,
                 f'=IFERROR(ROUND(SUM(\'{main_sheet}\'!{c1}{row}:{c2}{row})/'
-                f'({mcap}*{len(weeks)})*100,1),"-")')
+                f'({mcap}*{weight})*100,1),"-")')
             cell.border = BORDER
             cell.font = S["NORM"]
             cell.number_format = S["NUMFMT_PCT"]
@@ -819,7 +903,8 @@ def _write_efficiency_sheet(wb, title, month_groups, S, main_sheet, main_week_co
 
 # ── Main report builder ──────────────────────────────────────────────────────
 
-def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
+def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None,
+                         prod_rows_override=None, changeover_rows_override=None):
     """
     Parameters
     ----------
@@ -827,17 +912,24 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
     ref_bytes      : bytes  Reference workbook (for TBGS PER CTN)
     target_weeks   : list   e.g. [36, 37, 38, 39]
     fg_blend_bytes : bytes  FG Blend Names xlsx (defaults to the FG_Blend_Names.xlsx next to this file)
+    prod_rows_override       : pre-extracted extract_prod_register() rows to use
+                                instead of extracting pr_bytes (e.g. merged from more
+                                than one Production Register) — pr_bytes is still
+                                needed for register_date_label().
+    changeover_rows_override : pre-extracted changeover.read_production_rows() rows
+                                to use instead of reading pr_bytes, for the same reason.
 
     Returns
     -------
     (bytes, set, dict|None) — xlsx bytes, product names that could not be converted,
                               changeover summary (None when no FG Blend Names file is available)
 
-    Produces four visible sheets — Capacity Vs Production, Efficiency, Blend
-    Changeover, Brand Changeover — each grouped Zone/Region/Classification/
-    Machine Line, with weeks grouped under their month and a per-month SUM
-    column. Efficiency is capacity vs achieved in %, as live formulas
-    referencing the Capacity Vs Production sheet.
+    Produces five visible sheets — Capacity Vs Production, Capacity Vs
+    Production (in TBGS), Efficiency, Blend Changeover, Brand Changeover —
+    each grouped Zone/Region/Classification/Machine Line, with weeks grouped
+    under their month and a per-month SUM column. Efficiency is capacity vs
+    achieved in %, as live formulas referencing the Capacity Vs Production
+    sheet.
     """
     target_weeks = list(target_weeks)
     if fg_blend_bytes is None and os.path.exists(DEFAULT_FG_BLEND_FILE):
@@ -850,11 +942,23 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
         item_routing = load_item_routing(DEFAULT_ITEM_ROUTING_FILE)
 
     tbgs_per_ctn = load_tbgs_per_ctn(ref_bytes)
-    prod_rows = extract_prod_register(pr_bytes, item_routing)
+    prod_rows = prod_rows_override if prod_rows_override is not None else extract_prod_register(pr_bytes, item_routing)
     entries, skipped = prod_entries(prod_rows, tbgs_per_ctn, set(target_weeks))
+
+    # Full-week totals (for the over-capacity check and Observations) plus a
+    # split-by-month version (for the actual per-column values — a week that
+    # spans two calendar months gets its own column, and its own slice of
+    # production, in each).
     achieved = defaultdict(float)
+    achieved_split = defaultdict(float)
+    achieved_tbgs = defaultdict(float)
+    achieved_tbgs_split = defaultdict(float)
     for e in entries:
         achieved[(e["group"], e["wn"])] += e["containers"]
+        achieved_split[(e["group"], e["wn"], e["date"].year, e["date"].month)] += e["containers"]
+        tbgs = e["cfc"] * e["tpc"]
+        achieved_tbgs[(e["group"], e["wn"])] += tbgs
+        achieved_tbgs_split[(e["group"], e["wn"], e["date"].year, e["date"].month)] += tbgs
 
     month_groups = _month_groups(target_weeks, WEEK1_MONDAY)
     S = _styles()
@@ -862,11 +966,19 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
 
     line_rows, cap_end_row = _write_group_sheet(
         wb, SHEET_NAME, month_groups, S,
-        value_fn=lambda line, wn: achieved.get((line, wn), 0),
+        value_fn=lambda line, wn, y, m: achieved_split.get((line, wn, y, m), 0),
+        full_week_fn=lambda line, wn: achieved.get((line, wn), 0),
         with_capacity=True, use_active=True, grand_total=True)
 
+    _write_group_sheet(
+        wb, "Capacity Vs Production (TBGS)", month_groups, S,
+        value_fn=lambda line, wn, y, m: achieved_tbgs_split.get((line, wn, y, m), 0),
+        full_week_fn=lambda line, wn: achieved_tbgs.get((line, wn), 0),
+        with_capacity=True, grand_total=True, tbgs_capacity=True, decimals=2,
+        scale=100000, capacity_header="Capacity\n(TBGS ÷ 1,00,000)")
+
     main_week_col_n, main_month_span_n, _ = _block_columns(9, month_groups)
-    main_week_col = {wn: get_column_letter(c) for wn, c in main_week_col_n.items()}
+    main_week_col = {k: get_column_letter(c) for k, c in main_week_col_n.items()}
     main_month_span = {label: (get_column_letter(s), get_column_letter(e))
                         for label, (s, e) in main_month_span_n.items()}
     _write_efficiency_sheet(wb, "Efficiency", month_groups, S, SHEET_NAME, main_week_col, main_month_span)
@@ -874,20 +986,27 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
     co_info, model, by_lw = None, None, None
     if with_co:
         report_lines = list(dict.fromkeys(line_rows.values()))
-        model = changeover.build_model(pr_bytes, fg_blend_bytes, ROUTING_MAP, report_lines)
+        if changeover_rows_override is not None:
+            model = changeover.build_model_from_rows(changeover_rows_override, fg_blend_bytes, ROUTING_MAP, report_lines)
+        else:
+            model = changeover.build_model(pr_bytes, fg_blend_bytes, ROUTING_MAP, report_lines)
         changeover.write_changeover_sheets(wb, model, report_lines, WEEK1_MONDAY)
 
-        by_lw = model.by_line_week(weeknum)
+        by_lw = model.by_line_week(weeknum)                    # full-week (Observations use this)
         by_w = model.by_week(weeknum)
+        by_lwm = model.by_line_week_month(weeknum)             # split by month (per-column values)
+        by_wm = model.by_week_month(weeknum)
         _, blend_end_row = _write_group_sheet(
             wb, "Blend Changeover", month_groups, S,
-            value_fn=lambda line, wn: by_lw.get((line, wn), (0, 0))[0],
-            with_capacity=False, footer_fn=lambda wn: by_w.get(wn, (0, 0))[0],
+            value_fn=lambda line, wn, y, m: by_lwm.get((line, wn, y, m), (0, 0))[0],
+            full_week_fn=lambda line, wn: by_lw.get((line, wn), (0, 0))[0],
+            with_capacity=False, footer_fn=lambda wn, y, m: by_wm.get((wn, y, m), (0, 0))[0],
             co_ratio_week=target_weeks[-1])
         _, brand_end_row = _write_group_sheet(
             wb, "Brand Changeover", month_groups, S,
-            value_fn=lambda line, wn: by_lw.get((line, wn), (0, 0))[1],
-            with_capacity=False, footer_fn=lambda wn: by_w.get(wn, (0, 0))[1],
+            value_fn=lambda line, wn, y, m: by_lwm.get((line, wn, y, m), (0, 0))[1],
+            full_week_fn=lambda line, wn: by_lw.get((line, wn), (0, 0))[1],
+            with_capacity=False, footer_fn=lambda wn, y, m: by_wm.get((wn, y, m), (0, 0))[1],
             co_ratio_week=target_weeks[-1])
 
         blend_tot, brand_tot = model.totals
@@ -908,7 +1027,7 @@ def generate_avp_report(pr_bytes, ref_bytes, target_weeks, fg_blend_bytes=None):
     # ── Source Calculations (hidden) ────────────────────────────────────────
     _write_source_calculations(wb, entries, target_weeks, S, register_date_label(pr_bytes))
     hidden_sheets = [SOURCE_SHEET]
-    order = [SHEET_NAME, "Efficiency", "Blend Changeover", "Brand Changeover", SOURCE_SHEET]
+    order = [SHEET_NAME, "Capacity Vs Production (TBGS)", "Efficiency", "Blend Changeover", "Brand Changeover", SOURCE_SHEET]
     if with_co:
         hidden_sheets += [changeover.SHEET_CALC, changeover.SHEET_DETAIL,
                           changeover.SHEET_ROUTING, changeover.SHEET_FG]
@@ -1114,8 +1233,11 @@ def _write_source_calculations(wb, entries, target_weeks, S, register_label):
             if e["uom"] == "CTN":
                 formula = (f'({e["qty"]:,}CTN×{e["tbgs_ctn"]}TBGS/CTN÷{e["tpc"]}TBGS/CFC)'
                            f'÷{e["cpc"]}CFC/Cntr = {shown:.4f}')
-            else:
+            elif e["uom"] == "CFC":
                 formula = f'{e["qty"]:,}CFC÷{e["cpc"]}CFC/Cntr = {shown:.4f}'
+            else:
+                formula = (f'{e["qty"]:,}{e["uom"]}(TBGS)÷{e["tpc"]}TBGS/CFC'
+                           f'÷{e["cpc"]}CFC/Cntr = {shown:.4f}')
             vals = [idx, group, e["date"], f"W#{wn}", e["wc"], e["uom"], e["qty"],
                     e["tbgs_ctn"] if e["tbgs_ctn"] else "—", e["source"], e["tpc"], round(e["cfc"], 4),
                     e["cpc"], round(e["containers"], 6), formula]

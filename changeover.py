@@ -164,6 +164,17 @@ class ChangeoverModel:
             out[k][1] += c["items"] - 1
         return {k: tuple(v) for k, v in out.items()}
 
+    def by_line_week_month(self, weekno):
+        """{(line, week, year, month): (blend_co, brand_co)} — like
+        by_line_week but also split by the production date's calendar month,
+        for a week whose days span two months."""
+        out = defaultdict(lambda: [0, 0])
+        for c in self.calc:
+            k = (c["line"], weekno(c["date"]), c["date"].year, c["date"].month)
+            out[k][0] += c["blends"] - 1
+            out[k][1] += c["items"] - 1
+        return {k: tuple(v) for k, v in out.items()}
+
     def not_in_report(self):
         """{work center: (blend_co, brand_co)} for work centers with no report line."""
         out = defaultdict(lambda: [0, 0])
@@ -182,9 +193,25 @@ class ChangeoverModel:
             out[k][1] += c["items"] - 1
         return {k: tuple(v) for k, v in out.items()}
 
+    def by_week_month(self, weekno):
+        """{(week, year, month): (blend_co, brand_co)} — like by_week but
+        also split by the production date's calendar month."""
+        out = defaultdict(lambda: [0, 0])
+        for c in self.calc:
+            k = (weekno(c["date"]), c["date"].year, c["date"].month)
+            out[k][0] += c["blends"] - 1
+            out[k][1] += c["items"] - 1
+        return {k: tuple(v) for k, v in out.items()}
+
 
 def build_model(pr_src, fg_src, routing_map, report_lines):
     rows = read_production_rows(pr_src)
+    return build_model_from_rows(rows, fg_src, routing_map, report_lines)
+
+
+def build_model_from_rows(rows, fg_src, routing_map, report_lines):
+    """Same as build_model, but from already-extracted rows (e.g. merged from
+    more than one Production Register)."""
     fg = read_fg_blend_map(fg_src)
     report_lines = set(report_lines)
 
